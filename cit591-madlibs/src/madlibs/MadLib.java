@@ -19,6 +19,7 @@ public class MadLib {
     /**
      * madLibRunner method is the used to run the Mad-Lib game.  It will call on all the other methods and classes
      * to run the game.
+     * 
      * @author Brenda Moss
      */
     public void madLibRunner() {
@@ -40,13 +41,27 @@ public class MadLib {
         
         Scanner myScanner = new Scanner(System.in);
         
-        //Reads in the player's choice of literature based on menu and verifies valid input.
+        //Reads in the player's choice of literature based on menu, verifies valid input, identifies passage file name.
         int litChoice;
+        String passageFileName;
+        Passage passage;
+        
         if (myScanner.hasNextInt()) {
             litChoice = myScanner.nextInt();
             if (litChoice <= menuSize) {
-               //add what to do with menu selection here 
+               if (litChoice <= childrensMenu.size()) {
+                   passageFileName = childrensMenu.get(litChoice - 1).getLitFileName();
+                   //System.out.println(passageFileName);
+               }
+               else {
+                   passageFileName = classicsMenu.get(litChoice - childrensMenu.size() - 1).getLitFileName();
+                   //System.out.println(passageFileName);
+               }
                
+               String originalText = litReader(passageFileName);
+               //This is where we can pass the original text String to the Passage class methods
+               passage = new Passage(originalText);
+               //passage.passageRun();
             }
             else {
                 
@@ -73,6 +88,7 @@ public class MadLib {
      * was drawn, the author, and the .txt file that contains the passage.  The naming convention of the passage files is children#.txt or
      * classic#.txt depending on if the passage is a drawn from classic or children's literature.  This method is designed to automatically
      * expand if additional pieces of literature are added to the library.  
+     * 
      * @author Brenda Moss
      */
     public void makeMenu () {
@@ -86,7 +102,7 @@ public class MadLib {
                 String [] lineColumns = line.split(",");
                 String litTitle = lineColumns[0];
                 String litAuthor = lineColumns[1];
-                String litFileName = lineColumns[2];
+                String litFileName = lineColumns[2].trim();
                 String litGenre = "";
                 
                 //Adds an entry to the childrens or classics menu depending on the genre of literature
@@ -101,6 +117,7 @@ public class MadLib {
                     classicsMenu.add(entry);
                 }            
             }
+            //menuSize is used in both makeMenu and madLibRunner methods
             menuSize = childrensMenu.size() + classicsMenu.size();
             in.close();
             
@@ -132,6 +149,42 @@ public class MadLib {
         System.out.println();      
     }
     
+    /**
+     * litReader method takes in the file name of the literary passage the player selects from the Mad-Lib menu, reads the file and 
+     * returns a string containing the passage.
+     * @param litFileName
+     * @return originalText
+     * 
+     * @author - Brenda Moss
+     */
+    public String litReader(String litFileName) {
+        String originalText = null;
+        File litFile = new File(litFileName);
+
+        try {
+            Scanner myScanner = new Scanner(litFile);
+            originalText = myScanner.useDelimiter("\\Z").next(); 
+            System.out.println(originalText);
+            myScanner.close();
+        } 
+        
+        catch (FileNotFoundException e) {
+            System.out.println("Literature passage file could not be found.  Game ended");
+            System.exit(0);
+            //e.printStackTrace();
+        }
+        
+        return originalText;
+    }
+    
+    
+    /**
+     * invalidStart method manages invalid entries to for menu selection and terminates the game after three invalid entries.
+     * @param invalidCount
+     * @param notInteger
+     * 
+     * @author Brenda Moss
+     */
     public void invalidStart(int invalidCount, String notInteger) {
         while (invalidCount <= 2) {            
             System.out.printf("\"%s\" is not a menu choice. \n", notInteger);
