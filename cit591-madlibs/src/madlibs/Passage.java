@@ -64,8 +64,9 @@ public class Passage {
 		ingVerbs = new PartsOfSpeech();
 		
 		Document document = new Document(originalText);
+		
+		int index = 0;
 		for (Sentence sentence: document.sentences()) {
-			int index = 0;
 			for (String word: sentence.words()) {
 				words.add(word);
 			}
@@ -180,6 +181,14 @@ public class Passage {
 	public int getNumberOfPluralNounsToReplace() {
 		return pluralNouns.getNumberOfReplacementWords();
 	}
+	
+	/**
+	 * @return The indexes of all the plural nouns in this passage.
+	 */
+	public Integer[] getIndexesOfPluralNouns() {
+		return pluralNouns.getIndexesOfAllWords();
+	}
+	
 	/**
 	 * Replaces the identified plural nouns with the replacements from the user. 
 	 * @param userSuppliedWords
