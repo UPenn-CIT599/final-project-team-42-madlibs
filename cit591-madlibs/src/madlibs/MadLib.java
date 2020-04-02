@@ -6,6 +6,30 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MadLib {
+	//constants that will parameterize the sampling of the different parts of speech
+	private final int MIN_SINGULAR_NOUNS = 2;
+	private final int MAX_SINGULAR_NOUNS = 10;
+	private final double PERCENT_SINGULAR_NOUNS = 0.25;
+	
+	private final int MIN_PLURAL_NOUNS = 2;
+	private final int MAX_PLURAL_NOUNS = 10;
+	private final double PERCENT_PLURAL_NOUNS = 0.25;
+	
+	private final int MIN_ADJECTIVES = 2;
+	private final int MAX_ADJECTIVES = 10;
+	private final double PERCENT_ADJECTIVES = 0.25;
+	
+	private final int MIN_ADVERBS = 2;
+	private final int MAX_ADVERBS = 10;
+	private final double PERCENT_ADVERBS = 0.25;
+	
+	private final int MIN_EDVERBS = 2;
+	private final int MAX_EDVERBS = 10;
+	private final double PERCENT_EDVERBS = 0.25;
+	
+	private final int MIN_INGVERBS = 2;
+	private final int MAX_INGVERBS = 10;
+	private final double PERCENT_INGVERBS = 0.25;
     private ArrayList<MenuEntry> classicsMenu;
     private ArrayList<MenuEntry> childrensMenu;
     private int firstStart;

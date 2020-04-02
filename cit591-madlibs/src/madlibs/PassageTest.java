@@ -11,9 +11,7 @@ class PassageTest {
 
 	@BeforeAll
 	static void setupBeforeClass() {
-		/*
 		shortPassage = new Passage("To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.");
-		*/
 		longPassage = new Passage("Alice was beginning to get very tired of sitting by her sister on the\n" + 
 				"bank, and of having nothing to do: once or twice she had peeped into\n" + 
 				"the book her sister was reading, but it had no pictures or\n" + 
@@ -27,77 +25,70 @@ class PassageTest {
 				"close by her.");
 	}
 	
+	
+	@Test
+	void sampleTenTest() {
+		Integer[] indexesToSample = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+		assertArrayEquals(new Integer[] {4, 7, 0},
+				Passage.sample(indexesToSample, 0.33, 1, 5, 20200329));
+	}
+	
 	// Tests on shorter passage
 	@Test
-	void getNumberOfSingularNounsToReplaceShortTest() {
-		assertEquals(2, shortPassage.getNumberOfSingularNounsToReplace());
-	}
-	@Test
-	void getIndexesOfAllSingularNounsShortTest() {
+	void getIndexesOfSingularNounsShortTest() {
 		Integer[] expectedIndexes = {5, 13, 18};
-		assertArrayEquals(expectedIndexes, shortPassage.getIndexesOfSingularNouns());
+		assertArrayEquals(expectedIndexes, shortPassage.getIndexes(Passage.PartOfSpeech.SINGULAR_NOUN));
 	}
 	@Test
-	void getNumberOfPluralNounsToReplaceShortTest() {
-		assertEquals(0, shortPassage.getNumberOfPluralNounsToReplace());
+	void getIndexesOfAdverbsShortTest() {
+		// Note that index 14, else from "something else" should really be an adjective
+		// Issue with parser?
+		Integer[] expectedIndexes = {8, 14};
+		assertArrayEquals(expectedIndexes, shortPassage.getIndexes(Passage.PartOfSpeech.ADVERB));
 	}
 	@Test
-	void getNumberOfAdjectivesToReplaceShortTest() {
-		assertEquals(0, shortPassage.getNumberOfAdjectivesToReplace());
+	void getIndexesOfAdjectivesShortTest() {
+		// "greatest" (17) doesn't count because it is superlative. "else" (14)  doesn't count
+		// since parser thinks it is a adverb
+		Integer[] expectedIndexes = {};
+		assertArrayEquals(expectedIndexes, shortPassage.getIndexes(Passage.PartOfSpeech.ADJECTIVE));
 	}
 	@Test
-	void getNumberOfAdverbsToReplaceShortTest() {
-		assertEquals(2, shortPassage.getNumberOfAdverbsToReplace());
-	}
-	@Test
-	void getNumberOfIngVerbsToReplaceShortTest() {
-		assertEquals(1, shortPassage.getNumberOfIngVerbsToReplace());
-	}
-	@Test
-	void getNumberOfEdVerbsToReplaceShortTest() {
-		assertEquals(0, shortPassage.getNumberOfEdVerbsToReplace());
-	}
-	// Tests on longer passage - most of these are failing now
-	@Test
-	void getNumberOfSingularNounsToReplaceLongTest() {
-		assertEquals(2, longPassage.getNumberOfSingularNounsToReplace());
-	}
-	@Test
-	void getIndexesOfAllSingularNounsLongTest() {
+	void getIndexesOfSingularNounsLongTest() {
 		// Index 84 is not actually an noun, it is the word "feel" from "made her feel"
 		// so should be some sort of verb. However I guess the parser isn't perfect
+		// Note also that White Rabbit is counted as two nouns (114 and 115)
 		Integer[] expectedIndexes = {
 				0, 11, 14, 19, 31, 33, 51, 54, 57,
 				70, 81, 84, 93, 97, 102, 114, 115};
-		assertArrayEquals(expectedIndexes, longPassage.getIndexesOfSingularNouns());
+		assertArrayEquals(expectedIndexes, longPassage.getIndexes(Passage.PartOfSpeech.SINGULAR_NOUN));
 	}
 	
 	@Test
-	void getNumberOfPluralNounsToReplaceLongTest() {
-		assertEquals(0, longPassage.getNumberOfPluralNounsToReplace());
-	}
-	
-	@Test
-	void getIndexesOfAllPluralNounsLongTest() {
+	void getIndexesOfPluralNounsLongTest() {
 		Integer[] expectedIndexes = {41, 43, 59, 61, 109, 118};
-		assertArrayEquals(expectedIndexes, longPassage.getIndexesOfPluralNouns());
+		assertArrayEquals(expectedIndexes, longPassage.getIndexes(Passage.PartOfSpeech.PLURAL_NOUN));
+	}
+	
+	@Test
+	void getIndexesOfAdjectivesLongTest() {
+		Integer[] expectedIndexes = {6, 69, 80, 86, 88, 100, 117};
+		assertArrayEquals(expectedIndexes, longPassage.getIndexes(Passage.PartOfSpeech.ADJECTIVE));
 	}
 
 	@Test
-	void getNumberOfAdjectivesToReplaceLongTest() {
-		assertEquals(0, longPassage.getNumberOfAdjectivesToReplace());
+	void getIndexesOfAdverbsLongTest() {
+		Integer[] expectedIndexes = {5, 23, 25, 72, 73, 85, 105, 112, 120};
+		assertArrayEquals(expectedIndexes, longPassage.getIndexes(Passage.PartOfSpeech.ADVERB));
 	}
 	@Test
-	void getNumberOfAdverbsToReplaceLongTest() {
-		assertEquals(2, longPassage.getNumberOfAdverbsToReplace());
+	void getIndexesOfEdVerbsLongTest() {
+		Integer[] expectedIndexes = {28};
+		assertArrayEquals(expectedIndexes, longPassage.getIndexes(Passage.PartOfSpeech.ED_VERB));
 	}
 	@Test
-	void getNumberOfIngVerbsToReplaceLongTest() {
-		// 9 candidates * 0.25 = 2
-		assertEquals(8, longPassage.getNumberOfIngVerbsToReplace());
-	}
-	@Test
-	void getNumberOfEdVerbsToReplaceLongTest() {
-		assertEquals(0, longPassage.getNumberOfEdVerbsToReplace());
+	void getIndexesOfIngVerbsLongTest() {
+		Integer[] expectedIndexes = {2, 8, 18, 35, 66, 95, 104, 107};
+		assertArrayEquals(expectedIndexes, longPassage.getIndexes(Passage.PartOfSpeech.ING_VERB));
 	}
 }

@@ -6,62 +6,49 @@ import edu.stanford.nlp.simple.*;
 /**
  * This class represents a passage of text in a suitable format for playing a
  * game of MadLibs. It chooses which words will be replaced and accepts replacement words.
- * Will return the newly modifed text along with the indexes of the modified words
+ * Will return the newly modified text along with the indexes of the modified words
  * so that they can be highlighted. 
- * @author ross
  *
  */
 public class Passage {
 	
+	
+	public enum PartOfSpeech {
+		SINGULAR_NOUN,
+		PLURAL_NOUN,
+		ADJECTIVE,
+		ADVERB,
+		ED_VERB,
+		ING_VERB;
+	}
+	
 	private ArrayList<String> words;
 	
-	private PartsOfSpeech singularNouns;
-	private PartsOfSpeech pluralNouns;
-	private PartsOfSpeech adverbs;
-	private PartsOfSpeech adjectives;
-	private PartsOfSpeech ingVerbs;
-	private PartsOfSpeech edVerbs;
+	private ArrayList<Integer> singularNouns;
+	private ArrayList<Integer> pluralNouns;
+	private ArrayList<Integer> adverbs;
+	private ArrayList<Integer> adjectives;
+	private ArrayList<Integer> ingVerbs;
+	private ArrayList<Integer> edVerbs;
 	
 	private String originalText;
 	
-	//constants that will parameterize the sampling of the different parts of speech
-	private final int MIN_SINGULAR_NOUNS = 2;
-	private final int MAX_SINGULAR_NOUNS = 10;
-	private final double PERCENT_SINGULAR_NOUNS = 0.25;
-	
-	private final int MIN_PLURAL_NOUNS = 2;
-	private final int MAX_PLURAL_NOUNS = 10;
-	private final double PERCENT_PLURAL_NOUNS = 0.25;
-	
-	private final int MIN_ADJECTIVES = 2;
-	private final int MAX_ADJECTIVES = 10;
-	private final double PERCENT_ADJECTIVES = 0.25;
-	
-	private final int MIN_ADVERBS = 2;
-	private final int MAX_ADVERBS = 10;
-	private final double PERCENT_ADVERBS = 0.25;
-	
-	private final int MIN_EDVERBS = 2;
-	private final int MAX_EDVERBS = 10;
-	private final double PERCENT_EDVERBS = 0.25;
-	
-	private final int MIN_INGVERBS = 2;
-	private final int MAX_INGVERBS = 10;
-	private final double PERCENT_INGVERBS = 0.25;
 	/** Constructs a new Passage object from the supplied text.
 	 * 
 	 * @param originalText The text of the passage
 	 */
 	Passage (String originalText) {
+		
+	
 		this.originalText = originalText;
 		words = new ArrayList<String>();
 		
-		singularNouns = new PartsOfSpeech();
-		pluralNouns = new PartsOfSpeech();
-		adverbs = new PartsOfSpeech();
-		adjectives = new PartsOfSpeech();
-		edVerbs = new PartsOfSpeech();
-		ingVerbs = new PartsOfSpeech();
+		singularNouns = new ArrayList<Integer>();
+		pluralNouns = new ArrayList<Integer>();
+		adverbs = new ArrayList<Integer>();
+		adjectives = new ArrayList<Integer>();
+		edVerbs = new ArrayList<Integer>();
+		ingVerbs = new ArrayList<Integer>();
 		
 		Document document = new Document(originalText);
 		
@@ -70,7 +57,7 @@ public class Passage {
 			for (String word: sentence.words()) {
 				words.add(word);
 			}
-			// Get the different parts of speech, adding to appropiate object
+			// Get the different parts of speech, adding to appropriate object
 			for (String pos: sentence.posTags()) {
 				if (pos.equals("NN") || pos.equals("NNP")) {
 					singularNouns.add(index);
@@ -91,39 +78,8 @@ public class Passage {
 					edVerbs.add(index);
 				};
 				index++;
-			}
+			};
 		}
-		// Now sample
-		singularNouns.sample(
-				PERCENT_SINGULAR_NOUNS,
-				MIN_SINGULAR_NOUNS,
-				MAX_SINGULAR_NOUNS
-		);
-		pluralNouns.sample(
-				PERCENT_PLURAL_NOUNS,
-				MIN_PLURAL_NOUNS,
-				MAX_PLURAL_NOUNS
-		);
-		adjectives.sample(
-				PERCENT_ADJECTIVES,
-				MIN_ADJECTIVES,
-				MAX_ADJECTIVES
-		);
-		adverbs.sample(
-				PERCENT_ADVERBS,
-				MIN_ADVERBS,
-				MAX_ADVERBS
-		);
-		edVerbs.sample(
-				PERCENT_EDVERBS,
-				MIN_EDVERBS,
-				MAX_EDVERBS
-		);
-		ingVerbs.sample(
-				PERCENT_INGVERBS,
-				MIN_INGVERBS,
-				MAX_INGVERBS
-		);
 	}
 	
 	/**
@@ -139,7 +95,8 @@ public class Passage {
 	 * @return The modified text that contains user supplied words
 	 */
 	public String getUpdatedText() {
-		return "";
+		// Just an example case
+		return "This is a test case that is use to test things. Test!";
 	}
 	
 	/**
@@ -151,114 +108,112 @@ public class Passage {
 	 * the second element give the place where the word ends.
 	 */
 	public int[][] getIndexesOfReplacements() {
-		int[][] indexes = {{0,0}};
+		// Just an example case
+		int[][] indexes = {
+				{10, 14},
+				{35, 39},
+				{49, 53}
+		};
 		return indexes;
 	}
 	
 	/**
-	 * @return The number of singular nouns that the user should supply.
+	 * Helper method for converting an Integer ArrayList to an Array
+	 * @param list
+	 * @return
 	 */
-	public int getNumberOfSingularNounsToReplace() {
-		return singularNouns.getNumberOfReplacementWords();
+	private Integer[] toArray(ArrayList<Integer> list) {
+		return list.toArray(new Integer[list.size()]);
 	}
+	
 	/**
-	 * @return The indexes of all the singular nouns in this passage.
+	 * Returns the indexes where the specified part of speech can be found.
+	 * @param partOfSpeech A valid part of speech from the PartOfSpeech Enum
+	 * @return the indexes where the specified part of speech can be found,
+	 * as an Integer array 
 	 */
-	public Integer[] getIndexesOfSingularNouns() {
-		return singularNouns.getIndexesOfAllWords();
+	public Integer[] getIndexes(PartOfSpeech partOfSpeech) {
+		switch(partOfSpeech) {
+		case SINGULAR_NOUN:
+			return toArray(singularNouns);
+		case PLURAL_NOUN:
+			return toArray(pluralNouns);
+		case ADJECTIVE:
+			return toArray(adjectives);
+		case ADVERB:
+			return toArray(adverbs);
+		case ED_VERB:
+			return toArray(edVerbs);
+		case ING_VERB:
+			return toArray(ingVerbs);
+		default:
+			throw new IllegalArgumentException("Invalid part of speech");
+		}
 	}
+
 	/**
-	 * Replaces the identified singular nouns with the replacements from the user. 
-	 * @param userSuppliedWords
+	 * Samples from provided indexes based on the supplied criteria. A random seed is
+	 * required.
+	 * @param indexesToSample The indexes to sample from
+	 * @param percent The percent of words that should be selected for replacement
+	 * @param minN The minimum number of words that should be selected for replacement
+	 * @param maxN The maximum number of words that should be selected for replacement
+	 * @param seed The random seed
+	 * @return
 	 */
-	public void replaceSingularNouns(String[] userSuppliedWords) {
+	public static Integer[] sample(
+			Integer[] indexesToSample,
+			double percent,
+			int minN,
+			int maxN,
+			long seed
+			) {
+		int numToSample = (int) (percent * indexesToSample.length);
+		if (numToSample < minN) {
+			numToSample = minN;
+		}
+		if (numToSample > maxN) {
+			numToSample = maxN;
+		}
+		if (numToSample > indexesToSample.length) {
+			return indexesToSample;
+		}
+	
+		Integer[] sampledIndexes = new Integer[numToSample]; 
 		
-	}
-	
-	/**
-	 * @return The number of plural nouns that the user should supply.
-	 */
-	public int getNumberOfPluralNounsToReplace() {
-		return pluralNouns.getNumberOfReplacementWords();
-	}
-	
-	/**
-	 * @return The indexes of all the plural nouns in this passage.
-	 */
-	public Integer[] getIndexesOfPluralNouns() {
-		return pluralNouns.getIndexesOfAllWords();
-	}
-	
-	/**
-	 * Replaces the identified plural nouns with the replacements from the user. 
-	 * @param userSuppliedWords
-	 */
-	public void replacePluralNouns(String[] userSuppliedWords) {
+		Random random = new Random(seed);
+		// Determine spacing
+		int stepSize = indexesToSample.length / numToSample;
 		
+		// Determine starting index
+		int currentIndex = random.nextInt(indexesToSample.length);
+		for (int i = 0; i < numToSample; i++) {
+			sampledIndexes[i] = indexesToSample[currentIndex];
+			currentIndex += stepSize;
+			// If past end of available indexes, start from beginning
+			if (currentIndex >= indexesToSample.length) {
+				currentIndex -= indexesToSample.length;
+			}
+		}
+		return sampledIndexes;
 	}
 	
 	/**
-	 * @return The number of adjectives that the user should supply.
+	 * Samples from provided indexes based on the supplied criteria. No random seed is
+	 * required.
+	 * @param indexesToSample The indexes to sample from
+	 * @param percent The percent of words that should be selected for replacement
+	 * @param minN The minimum number of words that should be selected for replacement
+	 * @param maxN The maximum number of words that should be selected for replacement
+	 * @param seed The random seed
+	 * @return
 	 */
-	public int getNumberOfAdjectivesToReplace() {
-		return adjectives.getNumberOfReplacementWords();
+	public static Integer[] sample(
+			Integer[] indexesToSample,
+			double percent,
+			int minN,
+			int maxN
+			) {
+		return sample(indexesToSample, percent, minN, maxN, new Random().nextInt());
 	}
-	
-	/**
-	 * Replaces the identified adjectives with the replacements from the user. 
-	 * @param userSuppliedWords
-	 */
-	public void replaceAdjectives(String[] userSuppliedWords) {
-		
-	}
-	
-	/**
-	 * @return The number of adverbs that the user should supply.
-	 */
-	public int getNumberOfAdverbsToReplace() {
-		return adverbs.getNumberOfReplacementWords();
-	}
-	/**
-	 * Replaces the identified adverbs with the replacements from the user. 
-	 * @param userSuppliedWords
-	 */
-	public void replaceAdverbs(String[] userSuppliedWords) {
-		
-	}
-	/**
-	 * @return The number of "ed" verbs that the user should supply.
-	 */
-	public int getNumberOfEdVerbsToReplace() {
-		return edVerbs.getNumberOfReplacementWords();
-	}
-	/**
-	 * Replaces the identified "ed" verbs with the replacements from the user. 
-	 * @param userSuppliedWords
-	 */
-	public void replaceEdVerbs(String[] userSuppliedWords) {
-		
-	}
-	
-	/**
-	 * @return The number of "ing" verbs that the user should supply.
-	 */
-	public int getNumberOfIngVerbsToReplace() {
-		return ingVerbs.getNumberOfReplacementWords();
-	}
-	/**
-	 * Replaces the identified "ing" verbs with the replacements from the user. 
-	 * @param userSuppliedWords
-	 */
-	public void replaceIngVerbs(String[] userSuppliedWords) {
-		
-	}
-	/**
-	 * Get the words of this TaggedText object as an array.
-	 * @return An array of the words (tokens?) in this TaggedText object. Making certain
-	 * to return a copy, not the underlying, mutable, list.
-	 */
-	public String[] getWords() {
-		return words.toArray(new String[words.size()]);
-	}
-	
 }
