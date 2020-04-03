@@ -15,6 +15,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -34,6 +36,19 @@ public class UserInterface extends JPanel {
           File originalText = null;
 
      }
+     
+     private static class ButtonHandler implements ActionListener {
+          public void actionPerformed(ActionEvent e) {
+               System.exit(0);
+          }
+     }
+     
+     private static ButtonHandler newButtonHandler() {
+          // TODO Auto-generated method stub
+          return null;
+     }
+
+
 
      /**
       * Method that builds a panel that allows a user to insert text for filling in
@@ -42,7 +57,7 @@ public class UserInterface extends JPanel {
      private void buildInputPanel() {
           inputPanel = new JPanel();
           saveButton = new JButton("Fill in the blanks.");
-          saveButton.addActionListener(new ActionListener() {
+          //saveButton.addActionListener(new ActionListener()) {
 
           }
      
@@ -68,7 +83,27 @@ public class UserInterface extends JPanel {
           
           public static void main(String args[])
           {
+               UserInterface displayPanel = new UserInterface();
+               JButton okButton = new JButton("OK");
+               ButtonHandler listener = newButtonHandler();
+               okButton.addActionListener(listener);
+               
+               JPanel content = new JPanel();
+               content.setLayout(new BorderLayout());
+               content.add(displayPanel, BorderLayout.CENTER);
+               
+               
                JFrame gameFrame = new JFrame("Play Mad Libs");
+               gameFrame.setContentPane(content);
+               gameFrame.setSize(250,100);
+               gameFrame.setVisible(true);
+               
+               JTextArea textArea = new JTextArea();
+               JScrollPane scrollPane = new JScrollPane(textArea);
+               
+               
+               
+               
                
           }
 
