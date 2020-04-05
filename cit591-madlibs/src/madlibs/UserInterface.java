@@ -103,23 +103,20 @@ public class UserInterface extends JPanel implements ActionListener {
         }
     }
     
-  //-----------------------------------------------------------------------------------
-
     /**
-     * Main method 
-     * creates a window containing a panel of type UserInterface.
+     * windowSetUp() method sets up the initial user interface window used for the 
+     * Literature Mad-Libs game
      */
-    public static void main(String[] args) {
-        JFrame window = new JFrame("Mad Lib Game");
+    public void windowSetUp() {
+        JFrame window = new JFrame("Literature Mad-Libs Game");
         window.setContentPane(new UserInterface());
         window.pack();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(true);
+        window.setResizable(false);
         window.setLocation(150,100);
         window.setVisible(true);
+        
     }
-
-
 
 }
 

@@ -62,6 +62,13 @@ public class MadLib {
      */
     public void madLibRunner() {
         
+        //Opens UserInterface window
+        
+        //Design Progress Note:  Window in demo stage, game still played in console at this point
+        
+        UserInterface ui = new UserInterface();
+        ui.windowSetUp();
+        
 
         // Program greeting and menu prompt. Loop prevents introduction from being
         // presented each time madLibRunner() method is called.
