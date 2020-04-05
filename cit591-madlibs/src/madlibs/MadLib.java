@@ -5,6 +5,18 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * MadLib class is the primary class of the Literature Mad-Lib game.  It will call on 
+ * all the other methods and classes to run the game.  
+ * 
+ * @author Team 42 - Ross Beck-MacNeil, Paul Lysander, and Brenda Moss  
+ * 
+ * Design Progress Notes:  At this point we have designed a good amount of the logic for display
+ * to the console and will methodically start transferring it to a more user friendly GUI using 
+ * swing.  In the meantime, parts of the program will display on console while others display in 
+ * the GUI.
+ */
+
 public class MadLib {
 	//constants that will parameterize the sampling of the different parts of speech
 	private final int MIN_SINGULAR_NOUNS = 2;
@@ -30,21 +42,23 @@ public class MadLib {
 	private final int MIN_INGVERBS = 2;
 	private final int MAX_INGVERBS = 10;
 	private final double PERCENT_INGVERBS = 0.25;
+	
+
     private ArrayList<MenuEntry> classicsMenu;
     private ArrayList<MenuEntry> childrensMenu;
     private int firstStart;
     private int invalidCount;
     private int menuSize;
 
+    
     public MadLib() {
         
     }
     
     /**
-     * madLibRunner method is the used to run the Mad-Lib game.  It will call on all the other methods and classes
+     * madLibRunner method is used to run the Mad-Lib game.  It will call on all the other methods and classes
      * to run the game.
      * 
-     * @author Brenda Moss
      */
     public void madLibRunner() {
         
@@ -117,7 +131,6 @@ public class MadLib {
      * classic#.txt depending on if the passage is a drawn from classic or children's literature.  This method is designed to automatically
      * expand if additional pieces of literature are added to the library.  
      * 
-     * @author Brenda Moss
      */
     public void makeMenu () {
         File indexFile = new File("index.csv");
@@ -177,7 +190,7 @@ public class MadLib {
         System.out.println();      
     }
    /**
-    * This is a temporary method that demonstrates how to use the passage object
+    * promptForReplacement is a temporary method that demonstrates how to use the passage object
     * to determine which indexes should be replaced, prompt the user for the 
     * right number of replacement words, and then updated the passage with the
     * supplied words.
@@ -197,7 +210,7 @@ public class MadLib {
     			" of the following: " + partOfSpeech.getPrintableForm());
     	String[] replacementWords = new String[numberOfWordsToReplace];
     	for (int i = 0; i < numberOfWordsToReplace; i++) {
-    		System.out.println(i + "/" + numberOfWordsToReplace + ":");
+    		System.out.println((i + 1) + "/" + numberOfWordsToReplace + ":");
     		replacementWords[i] = in.nextLine();
     	}
     	passage.replaceWords(replacementWords, indexesToReplace);
@@ -209,7 +222,6 @@ public class MadLib {
      * @param litFileName
      * @return originalText
      * 
-     * @author - Brenda Moss
      */
     public String litReader(String litFileName) {
         String originalText = null;
@@ -237,7 +249,6 @@ public class MadLib {
      * @param invalidCount
      * @param notInteger
      * 
-     * @author Brenda Moss
      */
     public void invalidStart(int invalidCount, String notInteger) {
         while (invalidCount <= 2) {            

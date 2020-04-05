@@ -1,5 +1,12 @@
 package madlibs;
 
+/**
+ * MenuEntry class defines the parameters associated with each literary entry on the menu.  
+ * 
+ * @author Team 42 - Ross Beck-MacNeil, Paul Lysander, and Brenda Moss  
+ */
+
+
 public class MenuEntry {
     String litTitle;
     String litAuthor;

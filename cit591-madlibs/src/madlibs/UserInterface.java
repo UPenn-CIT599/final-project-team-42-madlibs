@@ -5,8 +5,12 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * Implements GUI components using Swing library.
- * Containing a button, a text input box, a text box (pop-up menu), and a text area.  
+ * UserInterface class implements GUI components using Swing library.
+ * 
+ * @author Team 42 - Ross Beck-MacNeil, Paul Lysander, and Brenda Moss  
+ * 
+ * Design Progress Notes:  Transition from console to GUI is a work in progress.  Currently 
+ * contains demo of a button, a text input box, a text box (pop-up menu), and a text area.  
  */
 public class UserInterface extends JPanel implements ActionListener {
 
@@ -110,7 +114,7 @@ public class UserInterface extends JPanel implements ActionListener {
         window.setContentPane(new UserInterface());
         window.pack();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(false);
+        window.setResizable(true);
         window.setLocation(150,100);
         window.setVisible(true);
     }
