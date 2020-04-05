@@ -12,18 +12,42 @@ import edu.stanford.nlp.simple.*;
  */
 public class Passage {
 	
-	
+	/**
+	 * A Enum for storing the different parts of speech that the user will
+	 * be prompted to provide replacements for.
+	 * @author ross
+	 *
+	 */
 	public enum PartOfSpeech {
-		SINGULAR_NOUN,
-		PLURAL_NOUN,
-		ADJECTIVE,
-		ADVERB,
-		ED_VERB,
-		ING_VERB;
+		SINGULAR_NOUN("Singular Noun"),
+		PLURAL_NOUN("Plural Noun"),
+		ADJECTIVE("Adjective"),
+		ADVERB("Adverb"),
+		ED_VERB("Verb ending in 'ed'"),
+		ING_VERB("Present verb ending in 'ing'");
+		
+		private String printableForm;
+		
+		PartOfSpeech(String printableForm) {
+			this.printableForm = printableForm;
+		}
+		/**
+		 * 
+		 * @return
+		 */
+		public String getPrintableForm() {
+			return printableForm;
+		}
 	}
 	
-	private ArrayList<String> words;
+	// For storing the words as individual strings
+	private ArrayList<String> originalWords;
+	private ArrayList<String> updatedWords;
 	
+	// For storing the indexes of the different parts of speech
+	/* TODO: consider combining with the PartOfSpeech class somehow. 
+	 * Maybe make a PartOfSpeech class? (Had that before...)
+	 */
 	private ArrayList<Integer> singularNouns;
 	private ArrayList<Integer> pluralNouns;
 	private ArrayList<Integer> adverbs;
@@ -41,7 +65,7 @@ public class Passage {
 		
 	
 		this.originalText = originalText;
-		words = new ArrayList<String>();
+		originalWords = new ArrayList<String>();
 		
 		singularNouns = new ArrayList<Integer>();
 		pluralNouns = new ArrayList<Integer>();
@@ -55,8 +79,9 @@ public class Passage {
 		int index = 0;
 		for (Sentence sentence: document.sentences()) {
 			for (String word: sentence.words()) {
-				words.add(word);
+				originalWords.add(word);
 			}
+			updatedWords = (ArrayList<String>) originalWords.clone();
 			// Get the different parts of speech, adding to appropriate object
 			for (String pos: sentence.posTags()) {
 				if (pos.equals("NN") || pos.equals("NNP")) {
@@ -115,6 +140,18 @@ public class Passage {
 				{49, 53}
 		};
 		return indexes;
+	}
+	
+	/**
+	 * Updates the words at the specified indexes with the supplied words.
+	 * @param replacementWords The new words that will overwrite the original words
+	 * @param indexes The indexes of the original words that should be replaed
+	 */
+	public void replaceWords(String[] replacementWords, Integer[] indexes) {
+		// TODO: Verify that they have the same length?
+		for (int i = 0; i < replacementWords.length; i++) {
+			updatedWords.set(indexes[i], replacementWords[i]);
+		}
 	}
 	
 	/**

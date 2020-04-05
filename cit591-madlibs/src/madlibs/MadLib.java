@@ -85,6 +85,10 @@ public class MadLib {
                String originalText = litReader(passageFileName);
                //This is where we can pass the original text String to the Passage class methods
                passage = new Passage(originalText);
+               // Prompt user to supply replacement words
+               for (Passage.PartOfSpeech partOfSpeech: Passage.PartOfSpeech.values()) {
+            	   promptForReplacement(passage, partOfSpeech);
+               }
                //passage.passageRun();
             }
             else {
@@ -171,6 +175,32 @@ public class MadLib {
         }
         
         System.out.println();      
+    }
+   /**
+    * This is a temporary method that demonstrates how to use the passage object
+    * to determine which indexes should be replaced, prompt the user for the 
+    * right number of replacement words, and then updated the passage with the
+    * supplied words.
+    * @param passage
+    * @param partOfSpeech
+    */
+    private void promptForReplacement(Passage passage, Passage.PartOfSpeech partOfSpeech) {
+    	Integer[] indexesToSample = passage.getIndexes(partOfSpeech);
+    	/* TODO: Figure out proper place to store different parameters for sampling
+    	* depending on part of speech, rather than hardcoding here
+    	*/
+    	Scanner in = new Scanner(System.in);
+    	Integer[] indexesToReplace = Passage.sample(indexesToSample, 0.33, 2, 10);
+    	int numberOfWordsToReplace = indexesToReplace.length;
+
+    	System.out.println("Please provide " + indexesToReplace.length  + 
+    			" of the following: " + partOfSpeech.getPrintableForm());
+    	String[] replacementWords = new String[numberOfWordsToReplace];
+    	for (int i = 0; i < numberOfWordsToReplace; i++) {
+    		System.out.println(i + "/" + numberOfWordsToReplace + ":");
+    		replacementWords[i] = in.nextLine();
+    	}
+    	passage.replaceWords(replacementWords, indexesToReplace);
     }
     
     /**
