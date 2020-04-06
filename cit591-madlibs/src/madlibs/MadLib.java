@@ -65,6 +65,7 @@ public class MadLib {
         //Opens UserInterface window
         
         //Design Progress Note:  Window in demo stage, game still played in console at this point
+        //   ** UserInterface == demo ; UserInterface1 == interface test area
         
         UserInterface ui = new UserInterface();
         ui.windowSetUp();
@@ -179,7 +180,7 @@ public class MadLib {
         int j;
         
         
-        //Displays the Children's Literature menu
+        //Displays the Children's Literature menu to console
         System.out.println();
         System.out.println("Children's Literature");
 
@@ -188,7 +189,7 @@ public class MadLib {
         }
         System.out.println();
         
-        //Displays the Classic Literature menu
+        //Displays the Classic Literature menu to console
         System.out.println("Classic Literature");
         for (j = childrensMenu.size() + 1; j <= childrensMenu.size() + classicsMenu.size(); j++) {
             System.out.println(j+ " " + classicsMenu.get(j - childrensMenu.size() - 1).getLitTitle() + " by" + childrensMenu.get(j - childrensMenu.size() - 1).getLitAuthor());
