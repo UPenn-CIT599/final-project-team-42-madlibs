@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 /**
  * MadLib class is the primary class of the Literature Mad-Lib game.  It will call on 
  * all the other methods and classes to run the game.  
@@ -49,9 +52,12 @@ public class MadLib {
     private int firstStart;
     private int invalidCount;
     private int menuSize;
+   
 
     
     public MadLib() {
+        classicsMenu = new ArrayList<MenuEntry>();
+        childrensMenu = new ArrayList<MenuEntry>();
         
     }
     
@@ -62,19 +68,9 @@ public class MadLib {
      */
     public void madLibRunner() {
         
-        //Opens UserInterface window
-        
-        //Design Progress Note:  Window in demo stage, game still played in console at this point
-        //   ** UserInterface == demo ; UserInterface1 == interface test area
-        
-        UserInterface ui = new UserInterface();
-        ui.windowSetUp();
-        
-
         // Program greeting and menu prompt. Loop prevents introduction from being
         // presented each time madLibRunner() method is called.
 
-        
         
         while (firstStart == 0) {
             System.out.println();
@@ -85,9 +81,10 @@ public class MadLib {
             firstStart++;
         }
         
+     
+        //Reads in the player's choice of literature based on menu, verifies valid input, identifies passage file name.
         Scanner myScanner = new Scanner(System.in);
         
-        //Reads in the player's choice of literature based on menu, verifies valid input, identifies passage file name.
         int litChoice;
         String passageFileName;
         Passage passage;
@@ -127,8 +124,7 @@ public class MadLib {
             invalidStart(invalidCount, invalidEntry);
         }
         
-        
-        
+   
         myScanner.close();
     }
     
@@ -142,8 +138,8 @@ public class MadLib {
      */
     public void makeMenu () {
         File indexFile = new File("index.csv");
-        classicsMenu = new ArrayList<MenuEntry>();
-        childrensMenu = new ArrayList<MenuEntry>();
+        //classicsMenu = new ArrayList<MenuEntry>();
+        //childrensMenu = new ArrayList<MenuEntry>();
         try {
             Scanner in = new Scanner(indexFile);
             while (in.hasNextLine()) {
@@ -175,12 +171,9 @@ public class MadLib {
             e.printStackTrace();
         }
         
-        
+      //Displays the Children's Literature menu to console
         int i;
         int j;
-        
-        
-        //Displays the Children's Literature menu to console
         System.out.println();
         System.out.println("Children's Literature");
 
@@ -192,11 +185,38 @@ public class MadLib {
         //Displays the Classic Literature menu to console
         System.out.println("Classic Literature");
         for (j = childrensMenu.size() + 1; j <= childrensMenu.size() + classicsMenu.size(); j++) {
-            System.out.println(j+ " " + classicsMenu.get(j - childrensMenu.size() - 1).getLitTitle() + " by" + childrensMenu.get(j - childrensMenu.size() - 1).getLitAuthor());
+            System.out.println(j+ " " + classicsMenu.get(j - childrensMenu.size() - 1).getLitTitle() + " by" + classicsMenu.get(j - childrensMenu.size() - 1).getLitAuthor());
         }
         
-        System.out.println();      
+        System.out.println();   
+        
+        //Opens UserInterface window and passes childrensMenu and classicMenu to UserInterface1
+        //to display menu
+                   
+        JFrame window = new JFrame("Literature Mad-Libs Game");
+        window.setContentPane(new UserInterface1(childrensMenu, classicsMenu));
+            //.setSize sets the frame size -- without it the frame would be tiny
+        window.setSize(1100, 600);
+        //window.pack();
+            //exits the program when the window is closed
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(true);
+        window.setLocation(150, 100);
+            //.setVisible allows frame to be visible
+        window.setVisible(true);
+         
     }
+    
+    public ArrayList<MenuEntry> getClassicsMenu() {
+        return classicsMenu;
+    }
+
+    public ArrayList<MenuEntry> getChildrensMenu() {
+        return childrensMenu;
+    }
+    
+    
+    
    /**
     * promptForReplacement is a temporary method that demonstrates how to use the passage object
     * to determine which indexes should be replaced, prompt the user for the 
@@ -272,6 +292,7 @@ public class MadLib {
     }
     
 	public static void main(String[] args) {
+	    
 		MadLib m = new MadLib();
 		m.madLibRunner();
 

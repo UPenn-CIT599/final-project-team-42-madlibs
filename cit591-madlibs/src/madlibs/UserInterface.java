@@ -9,7 +9,7 @@ import java.awt.event.*;
  * 
  * @author Team 42 - Ross Beck-MacNeil, Paul Lysander, and Brenda Moss  
  * 
- * Design Progress Notes:  Transition from console to GUI is a work in progress.  Currently 
+ * Design Progress Notes:  Transition from console to GUI is a work in progress.  Currently UserInterface
  * contains demo of a button, a text input box, a text box (pop-up menu), and a text area.  
  */
 public class UserInterface extends JPanel implements ActionListener {
@@ -108,7 +108,7 @@ public class UserInterface extends JPanel implements ActionListener {
      * Literature Mad-Libs game
      */
     public void windowSetUp() {
-        JFrame window = new JFrame("Literature Mad-Libs Game");
+        JFrame window = new JFrame("Demo of Swing Design Options for Mad-Lib Game");
         window.setContentPane(new UserInterface());
         window.pack();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
