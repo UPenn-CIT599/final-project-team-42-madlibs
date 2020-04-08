@@ -44,6 +44,10 @@ public class Passage {
 	private ArrayList<String> originalWords;
 	private ArrayList<String> updatedWords;
 	
+	// For tracking all parts of speech. Helps when reconstructing text and
+	// need to flag punctuation
+	private ArrayList<String> posTags;
+	
 	// For storing the indexes of the different parts of speech
 	/* TODO: consider combining with the PartOfSpeech class somehow. 
 	 * Maybe make a PartOfSpeech class? (Had that before...)
@@ -66,6 +70,7 @@ public class Passage {
 	
 		this.originalText = originalText;
 		originalWords = new ArrayList<String>();
+		posTags = new ArrayList<String>();
 		
 		singularNouns = new ArrayList<Integer>();
 		pluralNouns = new ArrayList<Integer>();
@@ -81,9 +86,10 @@ public class Passage {
 			for (String word: sentence.words()) {
 				originalWords.add(word);
 			}
-			updatedWords = (ArrayList<String>) originalWords.clone();
 			// Get the different parts of speech, adding to appropriate object
 			for (String pos: sentence.posTags()) {
+				posTags.add(pos);
+				
 				if (pos.equals("NN") || pos.equals("NNP")) {
 					singularNouns.add(index);
 				}
@@ -105,6 +111,7 @@ public class Passage {
 				index++;
 			};
 		}
+		updatedWords = (ArrayList<String>) originalWords.clone();
 	}
 	
 	/**
@@ -120,8 +127,22 @@ public class Passage {
 	 * @return The modified text that contains user supplied words
 	 */
 	public String getUpdatedText() {
-		// Just an example case
-		return "This is a test case that is use to test things. Test!";
+		/* Initialize with first word, since when adding additional words
+		* we will prepend a space so that words are spaced properly
+		*/
+		StringBuilder updatedText = new StringBuilder(updatedWords.get(0));
+		for (int i = 1; i < updatedWords.size(); i++) {
+			String pos = posTags.get(i);
+			String word = updatedWords.get(i);
+			if (pos.equals(".") || pos.equals(",") || pos.equals(":") || 
+				pos.equals("(") || pos.equals(")")) {
+				updatedText.append(word);
+			}
+			else {
+				updatedText.append(" " + word);
+			}
+		}
+		return updatedText.toString();
 	}
 	
 	/**
