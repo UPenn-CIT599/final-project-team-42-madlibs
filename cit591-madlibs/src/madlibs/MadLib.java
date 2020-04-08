@@ -72,14 +72,15 @@ public class MadLib {
         // presented each time madLibRunner() method is called.
 
         
-        while (firstStart == 0) {
-            System.out.println();
-            System.out.println("Welcome to Literature Mad-Libs");
-            System.out.println();
-            System.out.println("Please select a literature passage you would like to Mad-Lib: ");
-            makeMenu();         
-            firstStart++;
-        }
+        //while (firstStart == 0) {
+//            System.out.println();
+//            System.out.println("Welcome to Literature Mad-Libs");
+//            System.out.println();
+//            System.out.println("Please select a literature passage you would like to Mad-Lib: ");
+            makeMenu();
+            openUserInterface();
+//            firstStart++;
+        //}
         
      
         //Reads in the player's choice of literature based on menu, verifies valid input, identifies passage file name.
@@ -137,9 +138,7 @@ public class MadLib {
      * 
      */
     public void makeMenu () {
-        File indexFile = new File("index.csv");
-        //classicsMenu = new ArrayList<MenuEntry>();
-        //childrensMenu = new ArrayList<MenuEntry>();
+        File indexFile = new File("index.csv");        
         try {
             Scanner in = new Scanner(indexFile);
             while (in.hasNextLine()) {
@@ -189,10 +188,14 @@ public class MadLib {
         }
         
         System.out.println();   
-        
-        //Opens UserInterface window and passes childrensMenu and classicMenu to UserInterface1
-        //to display menu
-                   
+       
+    }
+    
+    /**
+     * openUserInterface method opens the user interface window and passes childrensMenu and classicMenu 
+     * to UserInterface1 to display menu
+     */
+    public void openUserInterface() {
         JFrame window = new JFrame("Literature Mad-Libs Game");
         window.setContentPane(new UserInterface1(childrensMenu, classicsMenu));
             //.setSize sets the frame size -- without it the frame would be tiny
@@ -204,7 +207,6 @@ public class MadLib {
         window.setLocation(150, 100);
             //.setVisible allows frame to be visible
         window.setVisible(true);
-         
     }
     
     public ArrayList<MenuEntry> getClassicsMenu() {
@@ -295,6 +297,8 @@ public class MadLib {
 	    
 		MadLib m = new MadLib();
 		m.madLibRunner();
+		
+		
 
 	}
 
