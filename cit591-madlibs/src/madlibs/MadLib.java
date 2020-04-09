@@ -14,10 +14,6 @@ import javax.swing.SwingUtilities;
  * 
  * @author Team 42 - Ross Beck-MacNeil, Paul Lysander, and Brenda Moss  
  * 
- * Design Progress Notes:  At this point we have designed a good amount of the logic for display
- * to the console and will methodically start transferring it to a more user friendly GUI using 
- * swing.  In the meantime, parts of the program will display on console while others display in 
- * the GUI.
  */
 
 public class MadLib {
@@ -64,69 +60,32 @@ public class MadLib {
     /**
      * madLibRunner method is used to run the Mad-Lib game.  It will call on all the other methods and classes
      * to run the game.
-     * 
      */
     public void madLibRunner() {
         
-        // Program greeting and menu prompt. Loop prevents introduction from being
-        // presented each time madLibRunner() method is called.
+        // Program greeting and menu prompt. Loop allows intial setup of menu and GUI to only be called
+        // the first time madLibRunner is initiated.
 
         
-        //while (firstStart == 0) {
-//            System.out.println();
-//            System.out.println("Welcome to Literature Mad-Libs");
-//            System.out.println();
-//            System.out.println("Please select a literature passage you would like to Mad-Lib: ");
+        while (firstStart == 0) {
+
             makeMenu();
             openUserInterface();
-//            firstStart++;
-        //}
-        
-     
-        //Reads in the player's choice of literature based on menu, verifies valid input, identifies passage file name.
-        Scanner myScanner = new Scanner(System.in);
-        
-        int litChoice;
-        String passageFileName;
-        Passage passage;
-        
-        if (myScanner.hasNextInt()) {
-            litChoice = myScanner.nextInt();
-            if (litChoice <= menuSize) {
-               if (litChoice <= childrensMenu.size()) {
-                   passageFileName = childrensMenu.get(litChoice - 1).getLitFileName();
-                   //System.out.println(passageFileName);
-               }
-               else {
-                   passageFileName = classicsMenu.get(litChoice - childrensMenu.size() - 1).getLitFileName();
-                   //System.out.println(passageFileName);
-               }
-               
-               String originalText = litReader(passageFileName);
+            firstStart++;
+        }     
+      
+               // **** MUST INCORPORATE INTO GUI
+               //String originalText = litReader(passageFileName);
                //This is where we can pass the original text String to the Passage class methods
-               passage = new Passage(originalText);
+               //passage = new Passage(originalText);
                // Prompt user to supply replacement words
-               for (Passage.PartOfSpeech partOfSpeech: Passage.PartOfSpeech.values()) {
-            	   promptForReplacement(passage, partOfSpeech);
-               }
-               //passage.passageRun();
-            }
-            else {
-                
-                invalidCount++;
-                String invalidEntry = Integer.toString(litChoice);
-                invalidStart(invalidCount, invalidEntry);
-            }
-        }
-        
-        else {
-            invalidCount++;
-            String invalidEntry = myScanner.next();
-            invalidStart(invalidCount, invalidEntry);
-        }
-        
-   
-        myScanner.close();
+               //for (Passage.PartOfSpeech partOfSpeech: Passage.PartOfSpeech.values()) {
+               //    promptForReplacement(passage, partOfSpeech);
+               //}
+               //
+               // ALSO think about whether first start is still useful or not.  
+               
+
     }
     
     /**
@@ -169,25 +128,7 @@ public class MadLib {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
-      //Displays the Children's Literature menu to console
-        int i;
-        int j;
-        System.out.println();
-        System.out.println("Children's Literature");
-
-        for (i = 1; i <= childrensMenu.size(); i++){
-            System.out.println(i+ " " + childrensMenu.get(i-1).getLitTitle() + " by " + childrensMenu.get(i-1).getLitAuthor());            
-        }
-        System.out.println();
-        
-        //Displays the Classic Literature menu to console
-        System.out.println("Classic Literature");
-        for (j = childrensMenu.size() + 1; j <= childrensMenu.size() + classicsMenu.size(); j++) {
-            System.out.println(j+ " " + classicsMenu.get(j - childrensMenu.size() - 1).getLitTitle() + " by" + classicsMenu.get(j - childrensMenu.size() - 1).getLitAuthor());
-        }
-        
-        System.out.println();   
+    
        
     }
     
@@ -259,8 +200,7 @@ public class MadLib {
 
         try {
             Scanner myScanner = new Scanner(litFile);
-            originalText = myScanner.useDelimiter("\\Z").next(); 
-            System.out.println(originalText);
+            originalText = myScanner.useDelimiter("\\Z").next();            
             myScanner.close();
         } 
         
@@ -273,25 +213,7 @@ public class MadLib {
         return originalText;
     }
     
-    
-    /**
-     * invalidStart method manages invalid entries to for menu selection and terminates the game after three invalid entries.
-     * @param invalidCount
-     * @param notInteger
-     * 
-     */
-    public void invalidStart(int invalidCount, String notInteger) {
-        while (invalidCount <= 2) {            
-            System.out.printf("\"%s\" is not a menu choice. \n", notInteger);
-            System.out.println("Invalid selection. Please enter a menu number between 1 and " + menuSize + " to indicate your literature selection. ");
-            madLibRunner();
-        }
 
-        System.out.println(
-                "You have entered several selections incorrectly. \nPlease rerun the Mad-Lib game again when you are ready to play.");
-        System.exit(0);
-
-    }
     
 	public static void main(String[] args) {
 	    

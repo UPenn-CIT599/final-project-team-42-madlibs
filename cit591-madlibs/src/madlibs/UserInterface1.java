@@ -7,11 +7,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
- * UserInterface1 class is a play area for testing implementation of GUI components using Swing library.
+  * UserInterface1 class implements GUI components using Swing library.
  * 
  * @author Team 42 - Ross Beck-MacNeil, Paul Lysander, and Brenda Moss  
- * 
- * Design Progress Notes:  This class is a test area for figuring out how to transition from console to GUI.  
  */
 public class UserInterface1 extends JPanel implements ActionListener {
 
@@ -122,8 +120,7 @@ public class UserInterface1 extends JPanel implements ActionListener {
         text = new JTextArea();
         text.setEditable(false);
         text.setMargin(new Insets(4, 4, 4, 4));
-        firstCard.add(new JScrollPane(text), BorderLayout.CENTER);
-        post("Eventually the original text of each passage will be displayed here when the player clicks on the menu selection.");
+        firstCard.add(new JScrollPane(text), BorderLayout.CENTER);        
         
         //Places a "PLAY MAD-LIBS button into the bottom cell of the overall BorderLayout and
         //nests another BorderLayout within the button in order to display a 2-line button
@@ -166,9 +163,6 @@ public class UserInterface1 extends JPanel implements ActionListener {
      * Respond to an ActionEvent from one of the GUI components in the panel.
      * In each case, a message about the event is posted to the text area.
      * This method is part of the ActionListener interface.
-     * 
-     * Design Progress Note:  This section needs to be expanded to display the text when each
-     * radio button is pressed.
      */
     public void actionPerformed(ActionEvent evt) {
         
@@ -178,7 +172,7 @@ public class UserInterface1 extends JPanel implements ActionListener {
             if (target instanceof JButton) {
                 if (RadioButtonSelected == true) {
                     c1.show(cards, "Replace Words");
-                    System.out.println(passage + "PLAY NOW");
+                    
                 }
                 else {
                     RadioButtonSelected = null;
