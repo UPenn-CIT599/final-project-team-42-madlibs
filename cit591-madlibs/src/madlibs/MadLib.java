@@ -17,32 +17,6 @@ import javax.swing.SwingUtilities;
  */
 
 public class MadLib {
-	//constants that will parameterize the sampling of the different parts of speech
-	private final int MIN_SINGULAR_NOUNS = 2;
-	private final int MAX_SINGULAR_NOUNS = 10;
-	private final double PERCENT_SINGULAR_NOUNS = 0.25;
-	
-	private final int MIN_PLURAL_NOUNS = 2;
-	private final int MAX_PLURAL_NOUNS = 10;
-	private final double PERCENT_PLURAL_NOUNS = 0.25;
-	
-	private final int MIN_ADJECTIVES = 2;
-	private final int MAX_ADJECTIVES = 10;
-	private final double PERCENT_ADJECTIVES = 0.25;
-	
-	private final int MIN_ADVERBS = 2;
-	private final int MAX_ADVERBS = 10;
-	private final double PERCENT_ADVERBS = 0.25;
-	
-	private final int MIN_EDVERBS = 2;
-	private final int MAX_EDVERBS = 10;
-	private final double PERCENT_EDVERBS = 0.25;
-	
-	private final int MIN_INGVERBS = 2;
-	private final int MAX_INGVERBS = 10;
-	private final double PERCENT_INGVERBS = 0.25;
-	
-
     private ArrayList<MenuEntry> classicsMenu;
     private ArrayList<MenuEntry> childrensMenu;
     private int firstStart;
@@ -168,17 +142,19 @@ public class MadLib {
     * @param passage
     * @param partOfSpeech
     */
-    private void promptForReplacement(Passage passage, Passage.PartOfSpeech partOfSpeech) {
+    private void promptForReplacement(Passage passage, PartOfSpeech partOfSpeech) {
     	Integer[] indexesToSample = passage.getIndexes(partOfSpeech);
-    	/* TODO: Figure out proper place to store different parameters for sampling
-    	* depending on part of speech, rather than hardcoding here
-    	*/
     	Scanner in = new Scanner(System.in);
-    	Integer[] indexesToReplace = Passage.sample(indexesToSample, 0.33, 2, 10);
+    	Integer[] indexesToReplace = Passage.sample(
+    		indexesToSample,
+    		partOfSpeech.getPercent(),
+    		partOfSpeech.getMinN(),
+    		partOfSpeech.getMaxN()
+    	);
     	int numberOfWordsToReplace = indexesToReplace.length;
 
     	System.out.println("Please provide " + indexesToReplace.length  + 
-    			" of the following: " + partOfSpeech.getPrintableForm());
+    			" of the following: " + partOfSpeech.getDescription());
     	String[] replacementWords = new String[numberOfWordsToReplace];
     	for (int i = 0; i < numberOfWordsToReplace; i++) {
     		System.out.println((i + 1) + "/" + numberOfWordsToReplace + ":");

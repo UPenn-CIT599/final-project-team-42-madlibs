@@ -12,33 +12,6 @@ import edu.stanford.nlp.simple.*;
  */
 public class Passage {
 	
-	/**
-	 * A Enum for storing the different parts of speech that the user will
-	 * be prompted to provide replacements for.
-	 * @author ross
-	 *
-	 */
-	public enum PartOfSpeech {
-		SINGULAR_NOUN("Singular Noun"),
-		PLURAL_NOUN("Plural Noun"),
-		ADJECTIVE("Adjective"),
-		ADVERB("Adverb"),
-		ED_VERB("Verb ending in 'ed'"),
-		ING_VERB("Present verb ending in 'ing'");
-		
-		private String printableForm;
-		
-		PartOfSpeech(String printableForm) {
-			this.printableForm = printableForm;
-		}
-		/**
-		 * 
-		 * @return
-		 */
-		public String getPrintableForm() {
-			return printableForm;
-		}
-	}
 	
 	// For storing the words as individual strings
 	private ArrayList<String> originalWords;
@@ -154,6 +127,12 @@ public class Passage {
 	 * the second element give the place where the word ends.
 	 */
 	public int[][] getIndexesOfReplacements() {
+		/*
+		 * Flow:
+		 * loop over words? check length? if a replacement then...
+		 * Need to track punctuation. Maybe need a new data structure?
+		 * Word object? Has length.. Punctuation? New line..  
+		 */
 		// Just an example case
 		int[][] indexes = {
 				{10, 14},
