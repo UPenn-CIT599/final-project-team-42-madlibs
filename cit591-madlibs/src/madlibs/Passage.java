@@ -42,23 +42,21 @@ public class Passage {
 	 */
 	private class Word {
 		// The actual word, as a string
-		private String string;
+		private String text;
 		// The blank space (including new lines) that comes before this word;
 		private String precedingBlanks;
 		// The blank space (including new lines?) that comes after this word;
 		private String trailingBlanks;
 		// The part of speech tag;
 		private String posTag;
-		
-		
-		
+		private boolean replaced = false;
 		/**
 		 * Constructs a new Word object from the supplied parameters.
 		 * @param string The actual word
 		 * @param beforeBlank The part of speech tag;
 		 */
 		Word (String string, String posTag) {
-			this.string = string;
+			this.text = string;
 			this.posTag = posTag;
 			// It is unfortunate that the ".after()" and ".before()" methods
 			// from the Sentence API don't appear to return the actual whitespace.
@@ -84,25 +82,39 @@ public class Passage {
 			}
 		}
 		
+		private void setReplaced(boolean replaced) {
+			this.replaced = replaced;
+		}
+		
+		private boolean isReplaced() {
+			return replaced;
+		}
+		
 		public String toString() {
-			return precedingBlanks + string + trailingBlanks;
+			return precedingBlanks + text + trailingBlanks;
 		}
 		
 		/*
 		 * Get the length of this word, including the blank spaces.
 		 */
-		public int getLength() {
+		public int length() {
 			return toString().length();
 		}
 		
 		/**
 		 * Update the actual string part of the word with the new string
-		 * @param string
+		 * @param text
 		 */
-		public void setString(String string) {
-			this.string = string;
+		public void setText(String text) {
+			this.text = text;
 		}
-		
+		/**
+		 * Update the actual string part of the word with the new string
+		 * @param text
+		 */
+		public String getText() {
+			return text;
+		}
 	}
 	
 	/** Constructs a new Passage object from the supplied text.
@@ -198,24 +210,36 @@ public class Passage {
 		 * Word object? Has length.. Punctuation? New line..  
 		 */
 		// Just an example case
-		int[][] indexes = {
-				{10, 14},
-				{35, 39},
-				{49, 53}
-		};
+		// For keeping track of index.
+		Integer index = 0;
+		ArrayList<Integer[]> indexesList = new ArrayList<Integer[]>();
+		for (Word word : updatedWords) {
+			if (word.isReplaced()) {
+				indexesList.add(new Integer[] {index, index + word.getText().length() - 1});
+			}
+			// The length method includes the trailing blank spaces.
+			index += word.length();
+		}
+		// We will return an array, since it is a bit more straightforward to work with
+		int[][] indexes = new int[indexesList.size()][2];
+		for (int i = 0; i < indexesList.size(); i++) {
+			indexes[i][0] = indexesList.get(i)[0];
+			indexes[i][1] = indexesList.get(i)[1];
+		}
 		return indexes;
 	}
 	
 	/**
 	 * Updates the words at the specified indexes with the supplied words.
 	 * @param replacementWords The new words that will overwrite the original words
-	 * @param indexes The indexes of the original words that should be replaed
+	 * @param indexes The indexes of the original words that should be replaced
 	 */
 	public void replaceWords(String[] replacementWords, Integer[] indexes) {
 		// TODO: Verify that they have the same length?
 		for (int i = 0; i < replacementWords.length; i++) {
 			Word wordToUpdate = updatedWords.get(indexes[i]);
-			wordToUpdate.setString(replacementWords[i]);
+			wordToUpdate.setText(replacementWords[i]);
+			wordToUpdate.setReplaced(true);
 		}
 	}
 	

@@ -26,6 +26,16 @@ class PassageTest {
 				Passage.sample(indexesToSample, 0.33, 1, 5, 20200329));
 	}
 	@Test
+	void indexesOfReplacementsTest() {
+		Passage shortPassage = new Passage(shortText);
+		shortPassage.replaceWords(
+			new String[] {"Alice Cooper", "Smart Car", "angriest"},
+			new Integer[] {2, 5, 17}
+		);
+		int[][] expectedIndexes = new int[][] {{6, 17}, {24, 32}, {94, 101}}; 
+		assertArrayEquals(expectedIndexes, shortPassage.getIndexesOfReplacements());
+	}
+	@Test
 	void getOriginalTextShortTest() {
 		Passage shortPassage = new Passage(shortText);
 		assertEquals(shortText, shortPassage.getUpdatedText());
