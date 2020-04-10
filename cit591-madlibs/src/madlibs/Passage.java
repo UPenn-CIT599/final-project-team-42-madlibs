@@ -14,16 +14,16 @@ public class Passage {
 	
 	
 	// For storing the words as individual strings
-	private ArrayList<String> originalWords;
-	private ArrayList<String> updatedWords;
+	private ArrayList<Word> originalWords;
+	private ArrayList<Word> updatedWords;
 	
 	// For tracking all parts of speech. Helps when reconstructing text and
 	// need to flag punctuation
 	private ArrayList<String> posTags;
 	
 	// For storing the indexes of the different parts of speech
-	/* TODO: consider combining with the PartOfSpeech class somehow. 
-	 * Maybe make a PartOfSpeech class? (Had that before...)
+	/* TODO: consider combining with the PartOfSpeech enum somehow (would involve
+	 * making it a "regular" class instead of an enum. 
 	 */
 	private ArrayList<Integer> singularNouns;
 	private ArrayList<Integer> pluralNouns;
@@ -34,6 +34,77 @@ public class Passage {
 	
 	private String originalText;
 	
+	/**
+	 * For storing important information about a word, such as the actual word,
+	 * the blank space before and after, and the total length (including preceding
+	 * and proceding blankspace. 
+	 *
+	 */
+	private class Word {
+		// The actual word, as a string
+		private String string;
+		// The blank space (including new lines) that comes before this word;
+		private String precedingBlanks;
+		// The blank space (including new lines?) that comes after this word;
+		private String trailingBlanks;
+		// The part of speech tag;
+		private String posTag;
+		
+		
+		
+		/**
+		 * Constructs a new Word object from the supplied parameters.
+		 * @param string The actual word
+		 * @param beforeBlank The part of speech tag;
+		 */
+		Word (String string, String posTag) {
+			this.string = string;
+			this.posTag = posTag;
+			// It is unfortunate that the ".after()" and ".before()" methods
+			// from the Sentence API don't appear to return the actual whitespace.
+			// I would expect newlines to be counted as whitespace, and don't expect
+			// a blank to appear before a period.
+			// Guess we will need to figure out on own.
+			trailingBlanks = "";
+			if (!isPunctuation()) {
+				precedingBlanks = " ";
+			}
+			else {
+				precedingBlanks = "";
+			}
+		}
+		
+		private boolean isPunctuation() {
+			if (posTag.equals(",") || posTag.equals(".") || posTag.equals("'") ||
+					posTag.equals("\"") || posTag.equals(":")) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		
+		public String toString() {
+			return precedingBlanks + string + trailingBlanks;
+		}
+		
+		/*
+		 * Get the length of this word, including the blank spaces.
+		 */
+		public int getLength() {
+			return toString().length();
+		}
+		
+		/**
+		 * Update the actual string part of the word with the new string
+		 * @param string
+		 */
+		public void setString(String string) {
+			this.string = string;
+		}
+		
+	}
+	
 	/** Constructs a new Passage object from the supplied text.
 	 * 
 	 * @param originalText The text of the passage
@@ -42,7 +113,7 @@ public class Passage {
 		
 	
 		this.originalText = originalText;
-		originalWords = new ArrayList<String>();
+		originalWords = new ArrayList<Word>();
 		posTags = new ArrayList<String>();
 		
 		singularNouns = new ArrayList<Integer>();
@@ -54,37 +125,39 @@ public class Passage {
 		
 		Document document = new Document(originalText);
 		
-		int index = 0;
+		int passageIndex = 0;
 		for (Sentence sentence: document.sentences()) {
-			for (String word: sentence.words()) {
-				originalWords.add(word);
-			}
-			// Get the different parts of speech, adding to appropriate object
-			for (String pos: sentence.posTags()) {
-				posTags.add(pos);
+			int sentenceIndex = 0;
+			for (int i = 0; i < sentence.length(); i++) {
+				String word = sentence.word(i);
+				String posTag = sentence.posTag(i);
+				originalWords.add(new Word(word, posTag));
+				// Get the different parts of speech, adding to appropriate object
+				posTags.add(posTag);
 				
-				if (pos.equals("NN") || pos.equals("NNP")) {
-					singularNouns.add(index);
+				if (posTag.equals("NN") || posTag.equals("NNP")) {
+					singularNouns.add(passageIndex);
 				}
-				else if (pos.equals("NNS") || pos.equals("NNPS")) {
-					pluralNouns.add(index);
+				else if (posTag.equals("NNS") || posTag.equals("NNPS")) {
+					pluralNouns.add(passageIndex);
 				}
-				else if (pos.equals("JJ")) {
-					adjectives.add(index);
+				else if (posTag.equals("JJ")) {
+					adjectives.add(passageIndex);
 				}
-				else if (pos.equals("RB")) {
-					adverbs.add(index);
+				else if (posTag.equals("RB")) {
+					adverbs.add(passageIndex);
 				}
-				else if (pos.equals("VBG")) {
-					ingVerbs.add(index);
+				else if (posTag.equals("VBG")) {
+					ingVerbs.add(passageIndex);
 				}
-				else if (pos.equals("VBN")) {
-					edVerbs.add(index);
+				else if (posTag.equals("VBN")) {
+					edVerbs.add(passageIndex);
 				};
-				index++;
+				sentenceIndex++;
+				passageIndex++;
 			};
 		}
-		updatedWords = (ArrayList<String>) originalWords.clone();
+		updatedWords = (ArrayList<Word>) originalWords.clone();
 	}
 	
 	/**
@@ -96,26 +169,17 @@ public class Passage {
 	}
 	
 	/**
-	 * 
 	 * @return The modified text that contains user supplied words
 	 */
 	public String getUpdatedText() {
 		/* Initialize with first word, since when adding additional words
 		* we will prepend a space so that words are spaced properly
 		*/
-		StringBuilder updatedText = new StringBuilder(updatedWords.get(0));
-		for (int i = 1; i < updatedWords.size(); i++) {
-			String pos = posTags.get(i);
-			String word = updatedWords.get(i);
-			if (pos.equals(".") || pos.equals(",") || pos.equals(":") || 
-				pos.equals("(") || pos.equals(")")) {
-				updatedText.append(word);
-			}
-			else {
-				updatedText.append(" " + word);
-			}
+		StringBuilder updatedText = new StringBuilder();
+		for (Word word : updatedWords) {
+			updatedText.append(word.toString());
 		}
-		return updatedText.toString();
+		return updatedText.toString().trim();
 	}
 	
 	/**
@@ -150,7 +214,8 @@ public class Passage {
 	public void replaceWords(String[] replacementWords, Integer[] indexes) {
 		// TODO: Verify that they have the same length?
 		for (int i = 0; i < replacementWords.length; i++) {
-			updatedWords.set(indexes[i], replacementWords[i]);
+			Word wordToUpdate = updatedWords.get(indexes[i]);
+			wordToUpdate.setString(replacementWords[i]);
 		}
 	}
 	
@@ -183,6 +248,7 @@ public class Passage {
 			return toArray(edVerbs);
 		case ING_VERB:
 			return toArray(ingVerbs);
+		// This should never happen...
 		default:
 			throw new IllegalArgumentException("Invalid part of speech");
 		}
