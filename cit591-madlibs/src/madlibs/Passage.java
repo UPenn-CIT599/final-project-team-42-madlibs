@@ -295,6 +295,16 @@ public class Passage {
 			int maxN,
 			long seed
 			) {
+		
+		// Some checks on parameters
+		if (minN < 0) {
+			throw new IllegalArgumentException("Need to request a minium of at" +
+				"least one word to replace ");
+		}
+		if (minN > maxN) {
+			throw new IllegalArgumentException("Mininum number of requested words is greater" +
+				"than maximum!");
+		}
 		int numToSample = (int) (percent * indexesToSample.length);
 		if (numToSample < minN) {
 			numToSample = minN;
