@@ -25,7 +25,8 @@ public class UserInterface1 extends JPanel implements ActionListener {
     private ArrayList<MenuEntry> childrensMenu;
     private ArrayList<MenuEntry> classicsMenu;
     private Boolean RadioButtonSelected = null;
-    private String passage = null;
+    private String originalText = null;
+    private Passage passage;
  
     
     /**
@@ -64,12 +65,13 @@ public class UserInterface1 extends JPanel implements ActionListener {
     private void designFirstCard() {
         //Sets BorderLayout as layout for firstCard and inserts title in the top (NORTH) cell
         firstCard.setLayout(new BorderLayout());
-        firstCard.setBackground(Color.WHITE);
-        firstCard.setBorder(BorderFactory.createLineBorder(Color.GRAY, 3));
-        JLabel title = new JLabel("Welcome to Literature Mad-Libs");
-        title.setHorizontalAlignment(SwingConstants.CENTER);
-        title.setPreferredSize(new Dimension(STANDARD_WIDTH, 50));
-        firstCard.add(title, BorderLayout.NORTH);
+        formatTitle(firstCard, "Welcome to Literature Mad-Libs");
+//        firstCard.setBackground(Color.WHITE);
+//        firstCard.setBorder(BorderFactory.createLineBorder(Color.GRAY, 3));
+//        JLabel title = new JLabel("Welcome to Literature Mad-Libs");
+//        title.setHorizontalAlignment(SwingConstants.CENTER);
+//        title.setPreferredSize(new Dimension(STANDARD_WIDTH, 50));
+//        firstCard.add(title, BorderLayout.NORTH);
         
         
         //Nests GridLayout into the left-middle (WEST) cell of the overall BorderLayout
@@ -99,7 +101,7 @@ public class UserInterface1 extends JPanel implements ActionListener {
             radioButton[i].setName(childrensMenu.get(i-1).getLitFileName());
         }
               
-        //Displays the Classic Literature menu to console
+        //Displays the Classic Literature menu options
         JLabel classicLabel = new JLabel("Classic Literature:");
         litMenu.add(classicLabel);
         for (int j = childrensMenu.size() + 1; j <= (childrensMenu.size() + classicsMenu.size()); j++) {
@@ -144,15 +146,46 @@ public class UserInterface1 extends JPanel implements ActionListener {
      * a Swing ......  
      */
     private void designSecondCard() {
+        //Sets BorderLayout as layout for firstCard and inserts title in the top (NORTH) cell
+        secondCard.setLayout(new BorderLayout());
+        formatTitle(secondCard, "Literature Mad-Lib Instructions:  Enter a word for each part of speech");
         
+        //Nests GridLayout into the middle (CENTER) cell of the overall BorderLayout
+        //This area will include text boxes to enter words of various parts of speech
+        JPanel wordEntry = new JPanel(); 
+        
+        System.out.println(originalText);
+        //passage = new Passage(originalText);
+//        //Prompt user to supply replacement words
+//        for (PartOfSpeech partOfSpeech: PartOfSpeech.values()) {
+//            promptForReplacement(passage, partOfSpeech);
+//        }
+//        
+//        //Calculates numberMenuRows for GridLayout based on how many passage options are available 
+//        //plus three to compensate for the instructions and "Children's Literature" & "Classic Literature" labels
+//        int numRows = (childrensMenu.size() + classicsMenu.size() + 3);        
+//        litMenu.setLayout(new GridLayout(numRows, 3, 3, 10));
+//        litMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+//        firstCard.add(litMenu, BorderLayout.WEST);
     }
     
+    
+    
     /**
-     * designSecondCard method sets up the second window shown in the Literature Mad-Lib game using
+     * designThirdCard method sets up the second window shown in the Literature Mad-Lib game using
      * a Swing ......  
      */
     private void designThirdCard() {
         
+    }
+    
+    private void formatTitle(JPanel card, String titleString) {
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createLineBorder(Color.GRAY, 3));
+        JLabel title = new JLabel(titleString);
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        title.setPreferredSize(new Dimension(STANDARD_WIDTH, 50));
+        card.add(title, BorderLayout.NORTH);
     }
     
     private void post(String message) { // add a message and line feed to the text
@@ -183,8 +216,8 @@ public class UserInterface1 extends JPanel implements ActionListener {
                 if (((JRadioButton) target).isSelected()) {
                     passageSelected = (JRadioButton) target;
                     MadLib m = new MadLib();
-                    passage = m.litReader(passageSelected.getName());
-                    text.setText(passage);
+                    originalText = m.litReader(passageSelected.getName());
+                    text.setText(originalText);
                     RadioButtonSelected = true;
                    
                   
