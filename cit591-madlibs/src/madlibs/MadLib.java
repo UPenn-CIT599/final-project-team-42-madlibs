@@ -22,6 +22,7 @@ public class MadLib {
     private int firstStart;
     private int invalidCount;
     private int menuSize;
+    private Passage passage;
    
 
     
@@ -48,15 +49,7 @@ public class MadLib {
             firstStart++;
         }     
       
-               // **** MUST INCORPORATE INTO GUI
-               //String originalText = litReader(passageFileName);
-               //This is where we can pass the original text String to the Passage class methods
-               //passage = new Passage(originalText);
-               // Prompt user to supply replacement words
-               //for (Passage.PartOfSpeech partOfSpeech: Passage.PartOfSpeech.values()) {
-               //    promptForReplacement(passage, partOfSpeech);
-               //}
-               //
+
                // ALSO think about whether first start is still useful or not.  
                
 
@@ -82,7 +75,7 @@ public class MadLib {
                 String litFileName = lineColumns[2].trim();
                 String litGenre = "";
                 
-                //Adds an entry to the childrens or classics menu depending on the genre of literature
+                //Adds an entry to the children's or classics menu depending on the genre of literature
                 if (litFileName.contains("children")) {
                     litGenre = "childrens";
                     MenuEntry entry = new MenuEntry(litTitle, litAuthor, litFileName, litGenre);
@@ -142,9 +135,8 @@ public class MadLib {
     * @param passage
     * @param partOfSpeech
     */
-    private void promptForReplacement(Passage passage, PartOfSpeech partOfSpeech) {
-    	Integer[] indexesToSample = passage.getIndexes(partOfSpeech);
-    	Scanner in = new Scanner(System.in);
+    public int promptForReplacement(Passage passage, PartOfSpeech partOfSpeech) {
+    	Integer[] indexesToSample = passage.getIndexes(partOfSpeech);	
     	Integer[] indexesToReplace = Passage.sample(
     		indexesToSample,
     		partOfSpeech.getPercent(),
@@ -152,15 +144,16 @@ public class MadLib {
     		partOfSpeech.getMaxN()
     	);
     	int numberOfWordsToReplace = indexesToReplace.length;
+    	return numberOfWordsToReplace;
 
-    	System.out.println("Please provide " + indexesToReplace.length  + 
-    			" of the following: " + partOfSpeech.getDescription());
-    	String[] replacementWords = new String[numberOfWordsToReplace];
-    	for (int i = 0; i < numberOfWordsToReplace; i++) {
-    		System.out.println((i + 1) + "/" + numberOfWordsToReplace + ":");
-    		replacementWords[i] = in.nextLine();
-    	}
-    	passage.replaceWords(replacementWords, indexesToReplace);
+//    	System.out.println("Please provide " + indexesToReplace.length  + 
+//    			" of the following: " + partOfSpeech.getDescription());
+//    	String[] replacementWords = new String[numberOfWordsToReplace];
+//    	for (int i = 0; i < numberOfWordsToReplace; i++) {
+//    		System.out.println((i + 1) + "/" + numberOfWordsToReplace + ":");
+//    		replacementWords[i] = in.nextLine();
+//    	}
+//    	passage.replaceWords(replacementWords, indexesToReplace);
     }
     
     /**
