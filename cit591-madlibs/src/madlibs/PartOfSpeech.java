@@ -6,12 +6,12 @@ package madlibs;
  *
  */
 public enum PartOfSpeech {
-	SINGULAR_NOUN("Singular noun", 0.2, 5, 2),
-	PLURAL_NOUN("Plural noun", 0.2, 5, 1),
-	ADJECTIVE("Adjective", 0.33, 5, 1),
-	ADVERB("Adverb", 0.33, 5, 1),
-	ED_VERB("A past verb ending in 'ed'", 0.33, 5, 2),
-	ING_VERB("Present verb ending in 'ing'", 0.33, 5, 2);
+	SINGULAR_NOUN("singular nouns", 0.2, 5, 2),
+	PLURAL_NOUN("plural nouns", 0.2, 5, 1),
+	ADJECTIVE("adjectives", 0.33, 5, 1),
+	ADVERB("adverbs", 0.33, 5, 1),
+	ED_VERB("past tense verbs ending in 'ed'", 0.33, 5, 2),
+	ING_VERB("present tense verb ending in 'ing'", 0.33, 5, 2);
 	
 	private String description;
 	// "Suggest" percent of this part of speech to sample

@@ -104,17 +104,23 @@ public class MadLib {
      * to UserInterface1 to display menu
      */
     public void openUserInterface() {
-        JFrame window = new JFrame("Literature Mad-Libs Game");
-        window.setContentPane(new UserInterface1(childrensMenu, classicsMenu));
-            //.setSize sets the frame size -- without it the frame would be tiny
-        window.setSize(1100, 600);
-        //window.pack();
-            //exits the program when the window is closed
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(true);
-        window.setLocation(150, 100);
-            //.setVisible allows frame to be visible
-        window.setVisible(true);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+        
+            JFrame window = new JFrame("Literature Mad-Libs Game");
+            window.setContentPane(new UserInterface1(childrensMenu, classicsMenu));
+                //.setSize sets the frame size -- without it the frame would be tiny
+            window.setSize(1100, 600);
+            //window.pack();
+                //exits the program when the window is closed
+            window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            window.setResizable(true);
+            window.setLocation(150, 100);
+                //.setVisible allows frame to be visible
+            window.setVisible(true);
+            }
+            
+        });
     }
     
     public ArrayList<MenuEntry> getClassicsMenu() {
@@ -135,7 +141,7 @@ public class MadLib {
     * @param passage
     * @param partOfSpeech
     */
-    public int promptForReplacement(Passage passage, PartOfSpeech partOfSpeech) {
+    public Integer[] promptForReplacement(Passage passage, PartOfSpeech partOfSpeech) {
     	Integer[] indexesToSample = passage.getIndexes(partOfSpeech);	
     	Integer[] indexesToReplace = Passage.sample(
     		indexesToSample,
@@ -143,17 +149,8 @@ public class MadLib {
     		partOfSpeech.getMinN(),
     		partOfSpeech.getMaxN()
     	);
-    	int numberOfWordsToReplace = indexesToReplace.length;
-    	return numberOfWordsToReplace;
-
-//    	System.out.println("Please provide " + indexesToReplace.length  + 
-//    			" of the following: " + partOfSpeech.getDescription());
-//    	String[] replacementWords = new String[numberOfWordsToReplace];
-//    	for (int i = 0; i < numberOfWordsToReplace; i++) {
-//    		System.out.println((i + 1) + "/" + numberOfWordsToReplace + ":");
-//    		replacementWords[i] = in.nextLine();
-//    	}
-//    	passage.replaceWords(replacementWords, indexesToReplace);
+    	
+    	return indexesToReplace;
     }
     
     /**
