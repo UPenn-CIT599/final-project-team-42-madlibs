@@ -284,7 +284,8 @@ public class UserInterface1 extends JPanel implements ActionListener {
         
         // Displays Mad-Lib updatedText in the text field 
         text2.setText("placeholder");
-        String updatedText = m.getResults();
+        // No need to wrap in a separate method
+        String updatedText = passage.getUpdatedText();
         System.out.println("updated text :" + updatedText);
         text2.setText(updatedText);
         
