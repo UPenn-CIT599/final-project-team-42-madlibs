@@ -66,7 +66,7 @@ public class MadLib {
     public void makeMenu () {
         File indexFile = new File("index.csv");        
         try {
-            Scanner in = new Scanner(indexFile);
+            Scanner in = new Scanner(indexFile, "utf-8");
             while (in.hasNextLine()) {
                 String line = in.nextLine();
                 String [] lineColumns = line.split(",");
@@ -165,7 +165,7 @@ public class MadLib {
         File litFile = new File(litFileName);
 
         try {
-            Scanner myScanner = new Scanner(litFile);
+            Scanner myScanner = new Scanner(litFile, "utf-8");
             originalText = myScanner.useDelimiter("\\Z").next();            
             myScanner.close();
         } 
