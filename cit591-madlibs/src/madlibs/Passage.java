@@ -55,8 +55,8 @@ public class Passage {
 		 * @param string The actual word
 		 * @param beforeBlank The part of speech tag;
 		 */
-		Word (String string, String posTag) {
-			this.text = string;
+		Word (String text, String posTag) {
+			this.text = text;
 			this.posTag = posTag;
 			// It is unfortunate that the ".after()" and ".before()" methods
 			// from the Sentence API don't appear to return the actual whitespace.
@@ -70,6 +70,13 @@ public class Passage {
 			else {
 				precedingBlanks = "";
 			}
+		}
+		// Alternative constructor that provides sets preceding blanks to an empty string
+		// and instead relies on trailing blanks;
+		Word (String text, String posTag, String trailingBlanks) {
+			this(text, posTag);
+			this.precedingBlanks = "";
+			this.trailingBlanks = trailingBlanks;
 		}
 		
 		private boolean isPunctuation() {
@@ -143,7 +150,8 @@ public class Passage {
 			for (int i = 0; i < sentence.length(); i++) {
 				String word = sentence.word(i);
 				String posTag = sentence.posTag(i);
-				originalWords.add(new Word(word, posTag));
+				String trailingBlanks = sentence.after(i);
+				originalWords.add(new Word(word, posTag, trailingBlanks));
 				// Get the different parts of speech, adding to appropriate object
 				posTags.add(posTag);
 				
