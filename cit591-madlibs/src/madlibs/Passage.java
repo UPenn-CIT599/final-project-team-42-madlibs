@@ -306,12 +306,16 @@ public class Passage {
 		
 		// Some checks on parameters
 		if (minN < 0) {
-			throw new IllegalArgumentException("Need to request a minium of at" +
+			throw new IllegalArgumentException("Need to request a minimum of at" +
 				"least one word to replace ");
 		}
 		if (minN > maxN) {
-			throw new IllegalArgumentException("Mininum number of requested words is greater" +
+			throw new IllegalArgumentException("Minimum number of requested words is greater" +
 				"than maximum!");
+		}
+		if (percent <= 0 || percent > 1.0) {
+			throw new IllegalArgumentException("The percentage of words to replace" +
+				"needs to be greater than 0 and no more than 1.0 (100%)");
 		}
 		int numToSample = (int) (percent * indexesToSample.length);
 		if (numToSample < minN) {
