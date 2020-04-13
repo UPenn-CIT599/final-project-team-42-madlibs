@@ -179,6 +179,14 @@ public class MadLib {
         return originalText;
     }
     
+    public String getResults() {
+        System.out.println("start getResults");
+        String updatedText = passage.getUpdatedText();
+        System.out.println("finished get Results" + updatedText);
+        
+        return updatedText;
+    }
+    
 
     
 	public static void main(String[] args) {

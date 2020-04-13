@@ -40,6 +40,9 @@ public class UserInterface1 extends JPanel implements ActionListener {
     private int numOfWords;
     private String[] replacementWords;
     Integer[] indexesToReplace;
+    
+    private JTextArea text2;
+    private JButton playAgainButton;
 
     /**
      * This constructor adds several GUI components to the panel and listens for
@@ -157,8 +160,9 @@ public class UserInterface1 extends JPanel implements ActionListener {
     }
 
     /**
-     * designWordRequestCards method sets up the second window shown in the
-     * Literature Mad-Lib game using a Swing ......
+     * designWordRequestCards method sets the design for the secondCard thru seventhCard.  Each card collects
+     * replacement words for a different part of speech.  If there are no replacement words required for a particular
+     * part of speech then that window (card) is not displayed.
      */
     private void designWordRequestCards() {
 
@@ -187,7 +191,11 @@ public class UserInterface1 extends JPanel implements ActionListener {
         cardCounter++;
 
     }
-
+    
+    /**
+     * setWordRequestCardLayout sets the layout for all the word request cards
+     * @param wordCard
+     */
     private void setWordRequestCardLayout(JPanel wordCard) {
         wordEntry.removeAll();
         // Sets BorderLayout as layout for secondCard and inserts title in the top
@@ -238,11 +246,48 @@ public class UserInterface1 extends JPanel implements ActionListener {
     }
 
     /**
-     * designThirdCard method sets up the second window shown in the Literature
-     * Mad-Lib game using a Swing ......
+     * designResultCard method sets up the result window (eighthCard) to display the passage
+     * with designated words replaced with the words inputed by the player on secondCard thru
+     * seventhCard
      */
-    private void designThirdCard() {
+    private void designResultCard() {
         c1.show(cards, "Result");
+        
+        // Sets BorderLayout as layout for firstCard and inserts title in the top
+        // (NORTH) cell
+        eighthCard.setLayout(new BorderLayout());
+        formatTitle(eighthCard, "Literature Mad-Lib Result");
+        
+        // Places scrolling text area into the middle (CENTER) cell of the overall
+        // BorderLayout  (note the EAST cell is empty)
+        text2 = new JTextArea();
+        text2.setEditable(false);
+        text2.setMargin(new Insets(4, 4, 4, 4));
+        eighthCard.add(new JScrollPane(text2), BorderLayout.CENTER);
+        System.out.println("finished result page layout setup");
+        
+        
+        // Places a "PLAY AGAIN button into the bottom cell of the overall
+        // BorderLayout and
+        // nests another BorderLayout within the button in order to display a 2-line
+        // button
+        playAgainButton = new JButton();
+        playAgainButton.setLayout(new BorderLayout());
+        JLabel label1 = new JLabel("PLAY AGAIN");
+        label1.setHorizontalAlignment(SwingConstants.CENTER);
+        playAgainButton.add(BorderLayout.NORTH, label1);
+       
+
+        // Adds action listener to the playButton
+        playAgainButton.addActionListener(this);
+        eighthCard.add(playAgainButton, BorderLayout.SOUTH);
+        
+        // Displays Mad-Lib updatedText in the text field 
+        text2.setText("placeholder");
+        String updatedText = m.getResults();
+        System.out.println("updated text :" + updatedText);
+        text2.setText(updatedText);
+        
     }
 
     private void formatTitle(JPanel card, String titleString) {
@@ -287,9 +332,12 @@ public class UserInterface1 extends JPanel implements ActionListener {
                         designWordRequestCards();
                     } else {
                         cardCounter = 0;
-                        designThirdCard();
+                        designResultCard();
                     }
                         
+                }
+                if (target == playAgainButton) {
+                    c1.show(cards, "Menu");
                 }
             }
             // Manages display of passage in right text panel when each radio button
