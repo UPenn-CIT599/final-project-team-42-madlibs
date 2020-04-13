@@ -25,6 +25,7 @@ public enum PartOfSpeech {
 		this.description = description;
 		this.maxN = maxN;
 		this.minN = minN;
+		this.percent = percent;
 	}
 	/**
 	 * @return A description of this part of speech that can be shown to the player
