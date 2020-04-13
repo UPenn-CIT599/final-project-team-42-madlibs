@@ -148,7 +148,7 @@ public class Passage {
 		for (Sentence sentence: document.sentences()) {
 			int sentenceIndex = 0;
 			for (int i = 0; i < sentence.length(); i++) {
-				String word = sentence.word(i);
+				String word = sentence.originalText(i);
 				String posTag = sentence.posTag(i);
 				String trailingBlanks = sentence.after(i);
 				originalWords.add(new Word(word, posTag, trailingBlanks));
