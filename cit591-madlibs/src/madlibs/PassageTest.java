@@ -30,7 +30,7 @@ class PassageTest {
 		Passage shortPassage = new Passage(shortText);
 		shortPassage.replaceWords(
 			new String[] {"Alice Cooper", "Smart Car", "angriest"},
-			new Integer[] {2, 5, 17}
+			new Integer[][] {{2}, {5}, {17}}
 		);
 		int[][] expectedIndexes = new int[][] {{6, 17}, {24, 32}, {94, 101}}; 
 		assertArrayEquals(expectedIndexes, shortPassage.getIndexesOfReplacements());
@@ -46,7 +46,7 @@ class PassageTest {
 		Passage shortPassage = new Passage(shortText);
 		shortPassage.replaceWords(
 			new String[] {"help", "Alice Cooper", "Smart Car", "angriest"},
-			new Integer[] {0, 2, 5, 17}
+			new Integer[][] {{0}, {2}, {5}, {17}}
 		);
 		String expectedText = "Help be Alice Cooper in a Smart Car that is constantly " +
 				"trying to make you something else is the angriest accomplishment.";
@@ -57,7 +57,7 @@ class PassageTest {
 		Passage shortPassage = new Passage(shortText);
 		shortPassage.replaceWords(
 			new String[] {"Alice Cooper", "Smart Car", "angriest"},
-			new Integer[] {2, 5, 17}
+			new Integer[][] {{2}, {5}, {17}}
 		);
 		String expectedText = "To be Alice Cooper in a Smart Car that is constantly " +
 				"trying to make you something else is the angriest accomplishment.";

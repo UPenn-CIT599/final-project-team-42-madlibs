@@ -25,12 +25,12 @@ public class Passage {
 	/* TODO: consider combining with the PartOfSpeech enum somehow (would involve
 	 * making it a "regular" class instead of an enum. 
 	 */
-	private ArrayList<Integer> singularNouns;
-	private ArrayList<Integer> pluralNouns;
-	private ArrayList<Integer> adverbs;
-	private ArrayList<Integer> adjectives;
-	private ArrayList<Integer> ingVerbs;
-	private ArrayList<Integer> edVerbs;
+	private PartOfSpeechTracker singularNouns;
+	private PartOfSpeechTracker pluralNouns;
+	private PartOfSpeechTracker adverbs;
+	private PartOfSpeechTracker adjectives;
+	private PartOfSpeechTracker ingVerbs;
+	private PartOfSpeechTracker edVerbs;
 	
 	private String originalText;
 	
@@ -106,6 +106,41 @@ public class Passage {
 		}
 	}
 	
+	// For tracking the indexes of the different parts of speech
+	class PartOfSpeechTracker {
+		// Keys are the string of original words, values are indexes where this word can be found.
+		// Keys but not correspond to current word, if replacement had been done
+		private HashMap<String, ArrayList<Integer>> indexLookup;
+		// For knowing the total number of individual words that belong to this
+		// part of speech in this passage
+		private int numOccurences = 0;
+		
+		PartOfSpeechTracker() {
+			indexLookup = new HashMap<String, ArrayList<Integer>>();
+		}
+		
+		public void add(String word, int index) {
+			if(!indexLookup.containsKey(word)) {
+				indexLookup.put(word, new ArrayList<Integer>());
+			}
+			indexLookup.get(word).add(index);
+		}
+		
+		// Convert a flat array of indexes - sorted. Partially so tests don't break
+		public Integer[] toArray() {
+			ArrayList<Integer> allIndexes = new ArrayList<Integer>();
+			for (String word : indexLookup.keySet()) {
+				ArrayList<Integer> theseIndexes = indexLookup.get(word);
+				for (Integer index : theseIndexes) {
+					allIndexes.add(index);
+				}
+			}
+			Collections.sort(allIndexes);
+			return allIndexes.toArray(new Integer[allIndexes.size()]);
+		}
+		
+	}
+	
 	/** Constructs a new Passage object from the supplied text.
 	 * 
 	 * @param originalText The text of the passage
@@ -117,12 +152,11 @@ public class Passage {
 		originalWords = new ArrayList<Word>();
 		posTags = new ArrayList<String>();
 		
-		singularNouns = new ArrayList<Integer>();
-		pluralNouns = new ArrayList<Integer>();
-		adverbs = new ArrayList<Integer>();
-		adjectives = new ArrayList<Integer>();
-		edVerbs = new ArrayList<Integer>();
-		ingVerbs = new ArrayList<Integer>();
+		singularNouns = new PartOfSpeechTracker();		pluralNouns = new PartOfSpeechTracker();
+		adverbs = new PartOfSpeechTracker();
+		adjectives = new PartOfSpeechTracker();
+		edVerbs = new PartOfSpeechTracker();
+		ingVerbs = new PartOfSpeechTracker();
 		
 		Document document = new Document(originalText);
 		
@@ -137,22 +171,22 @@ public class Passage {
 				posTags.add(posTag);
 				
 				if (posTag.equals("NN") || posTag.equals("NNP")) {
-					singularNouns.add(passageIndex);
+					singularNouns.add(word, passageIndex);
 				}
 				else if (posTag.equals("NNS") || posTag.equals("NNPS")) {
-					pluralNouns.add(passageIndex);
+					pluralNouns.add(word, passageIndex);
 				}
 				else if (posTag.equals("JJ")) {
-					adjectives.add(passageIndex);
+					adjectives.add(word, passageIndex);
 				}
 				else if (posTag.equals("RB")) {
-					adverbs.add(passageIndex);
+					adverbs.add(word, passageIndex);
 				}
 				else if (posTag.equals("VBG")) {
-					ingVerbs.add(passageIndex);
+					ingVerbs.add(word, passageIndex);
 				}
 				else if (posTag.equals("VBN")) {
-					edVerbs.add(passageIndex);
+					edVerbs.add(word, passageIndex);
 				};
 				passageIndex++;
 			};
@@ -191,14 +225,6 @@ public class Passage {
 	 * the second element give the place where the word ends.
 	 */
 	public int[][] getIndexesOfReplacements() {
-		/*
-		 * Flow:
-		 * loop over words? check length? if a replacement then...
-		 * Need to track punctuation. Maybe need a new data structure?
-		 * Word object? Has length.. Punctuation? New line..  
-		 */
-		// Just an example case
-		// For keeping track of index.
 		Integer index = 0;
 		ArrayList<Integer[]> indexesList = new ArrayList<Integer[]>();
 		for (Word word : updatedWords) {
@@ -220,24 +246,18 @@ public class Passage {
 	/**
 	 * Updates the words at the specified indexes with the supplied words.
 	 * @param replacementWords The new words that will overwrite the original words
-	 * @param indexes The indexes of the original words that should be replaced
+	 * @param indexes The indexes of the original words that should be replaced.
+	 * This is an integer array of integers, because can replace indexes with the
+	 * same word at the same time.
 	 */
-	public void replaceWords(String[] replacementWords, Integer[] indexes) {
-		// TODO: Verify that they have the same length?
-		for (int i = 0; i < replacementWords.length; i++) {
-			Word wordToUpdate = updatedWords.get(indexes[i]);
-			wordToUpdate.setText(replacementWords[i]);
-			wordToUpdate.setReplaced(true);
+	public void replaceWords(String[] replacementWords, Integer[][] indexes) {
+		for (int i = 0; i < indexes.length; i++) {
+			for (int j = 0; j < indexes[i].length; j++) {
+				Word wordToUpdate = updatedWords.get(indexes[i][j]);
+				wordToUpdate.setText(replacementWords[i]);
+				wordToUpdate.setReplaced(true);
+			}
 		}
-	}
-	
-	/**
-	 * Helper method for converting an Integer ArrayList to an Array
-	 * @param list
-	 * @return
-	 */
-	private Integer[] toArray(ArrayList<Integer> list) {
-		return list.toArray(new Integer[list.size()]);
 	}
 	
 	/**
@@ -249,17 +269,17 @@ public class Passage {
 	public Integer[] getIndexes(PartOfSpeech partOfSpeech) {
 		switch(partOfSpeech) {
 		case SINGULAR_NOUN:
-			return toArray(singularNouns);
+			return singularNouns.toArray();
 		case PLURAL_NOUN:
-			return toArray(pluralNouns);
+			return pluralNouns.toArray();
 		case ADJECTIVE:
-			return toArray(adjectives);
+			return adjectives.toArray();
 		case ADVERB:
-			return toArray(adverbs);
+			return adverbs.toArray();
 		case ED_VERB:
-			return toArray(edVerbs);
+			return edVerbs.toArray();
 		case ING_VERB:
-			return toArray(ingVerbs);
+			return ingVerbs.toArray();
 		// This should never happen...
 		default:
 			throw new IllegalArgumentException("Invalid part of speech");
