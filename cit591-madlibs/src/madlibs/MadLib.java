@@ -18,9 +18,7 @@ import javax.swing.SwingUtilities;
 
 public class MadLib {
     private ArrayList<MenuEntry> classicsMenu;
-    private ArrayList<MenuEntry> childrensMenu;
-    private int firstStart;
-    private int invalidCount;
+    private ArrayList<MenuEntry> childrensMenu; 
     private int menuSize;
     private Passage passage;
    
@@ -38,22 +36,13 @@ public class MadLib {
      */
     public void madLibRunner() {
         
-        // Program greeting and menu prompt. Loop allows intial setup of menu and GUI to only be called
-        // the first time madLibRunner is initiated.
-
-        
-        while (firstStart == 0) {
-
-            makeMenu();
-            openUserInterface();
-            firstStart++;
-        }     
-      
-
-               // ALSO think about whether first start is still useful or not.  
-               
-
+        // Manages the initial run of the game by directing the construction of the menu and 
+        // opening the graphical user interface.
+       
+        makeMenu();
+        openUserInterface();   
     }
+    
     
     /**
      * makeMenu method is the used to create the Mad-Lib game menu.  The menu entries are drawn from a file named index.csv.  The 
@@ -94,10 +83,9 @@ public class MadLib {
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
-    
-       
+        }      
     }
+    
     
     /**
      * openUserInterface method opens the user interface window and passes childrensMenu and classicMenu 
@@ -122,17 +110,8 @@ public class MadLib {
             
         });
     }
-    
-    public ArrayList<MenuEntry> getClassicsMenu() {
-        return classicsMenu;
-    }
-
-    public ArrayList<MenuEntry> getChildrensMenu() {
-        return childrensMenu;
-    }
-    
-    
-    
+       
+       
    /**
     * promptForReplacement is a temporary method that demonstrates how to use the passage object
     * to determine which indexes should be replaced, prompt the user for the 
@@ -152,6 +131,8 @@ public class MadLib {
     	
     	return indexesToReplace;
     }
+    
+    
     
     /**
      * litReader method takes in the file name of the literary passage the player selects from the Mad-Lib menu, reads the file and 
@@ -178,16 +159,8 @@ public class MadLib {
         
         return originalText;
     }
-    
-    public String getResults() {
-        System.out.println("start getResults");
-        String updatedText = passage.getUpdatedText();
-        System.out.println("finished get Results" + updatedText);
-        
-        return updatedText;
-    }
-    
 
+    
     
 	public static void main(String[] args) {
 	    

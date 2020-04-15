@@ -43,6 +43,7 @@ public class UserInterface1 extends JPanel implements ActionListener {
     
     private JTextArea text2;
     private JButton playAgainButton;
+    private int firstStart;
 
     /**
      * This constructor adds several GUI components to the panel and listens for
@@ -253,41 +254,45 @@ public class UserInterface1 extends JPanel implements ActionListener {
     private void designResultCard() {
         c1.show(cards, "Result");
         
-        // Sets BorderLayout as layout for firstCard and inserts title in the top
-        // (NORTH) cell
-        eighthCard.setLayout(new BorderLayout());
-        formatTitle(eighthCard, "Literature Mad-Lib Result");
+        while (firstStart == 0) {
+            // Sets BorderLayout as layout for firstCard and inserts title in the top
+            // (NORTH) cell
+            eighthCard.setLayout(new BorderLayout());
+            formatTitle(eighthCard, "Literature Mad-Lib Result");
+            
+            // Places scrolling text area into the middle (CENTER) cell of the overall
+            // BorderLayout  (note the EAST cell is empty)
+            text2 = new JTextArea();
+            text2.setEditable(false);
+            text2.setMargin(new Insets(4, 4, 4, 4));
+            
+            eighthCard.add(new JScrollPane(text2), BorderLayout.CENTER);
+            
+            System.out.println("finished result page layout setup");
+            
+            // Places a "PLAY AGAIN button into the bottom cell of the overall
+            // BorderLayout and
+            // nests another BorderLayout within the button in order to display a 2-line
+            // button
+            playAgainButton = new JButton();
+            playAgainButton.setLayout(new BorderLayout());
+            JLabel label1 = new JLabel("PLAY AGAIN");
+            label1.setHorizontalAlignment(SwingConstants.CENTER);
+            playAgainButton.add(BorderLayout.NORTH, label1);
+           
+    
+            // Adds action listener to the playButton
+            playAgainButton.addActionListener(this);
+            eighthCard.add(playAgainButton, BorderLayout.SOUTH);
         
-        // Places scrolling text area into the middle (CENTER) cell of the overall
-        // BorderLayout  (note the EAST cell is empty)
-        text2 = new JTextArea();
-        text2.setEditable(false);
-        text2.setMargin(new Insets(4, 4, 4, 4));
-        eighthCard.add(new JScrollPane(text2), BorderLayout.CENTER);
-        System.out.println("finished result page layout setup");
-        
-        
-        // Places a "PLAY AGAIN button into the bottom cell of the overall
-        // BorderLayout and
-        // nests another BorderLayout within the button in order to display a 2-line
-        // button
-        playAgainButton = new JButton();
-        playAgainButton.setLayout(new BorderLayout());
-        JLabel label1 = new JLabel("PLAY AGAIN");
-        label1.setHorizontalAlignment(SwingConstants.CENTER);
-        playAgainButton.add(BorderLayout.NORTH, label1);
-       
-
-        // Adds action listener to the playButton
-        playAgainButton.addActionListener(this);
-        eighthCard.add(playAgainButton, BorderLayout.SOUTH);
+            firstStart++;
+        }
         
         // Displays Mad-Lib updatedText in the text field 
-        text2.setText("placeholder");
-        // No need to wrap in a separate method
         String updatedText = passage.getUpdatedText();
-        System.out.println("updated text :" + updatedText);
+        //System.out.println("updated text :" + updatedText);
         text2.setText(updatedText);
+        
         
     }
 
