@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+
 /**
  * UserInterface1 class implements GUI components using Swing library.
  * 
@@ -44,6 +45,8 @@ public class UserInterface1 extends JPanel implements ActionListener {
     private JTextArea text2;
     private JButton playAgainButton;
     private int firstStart;
+    
+    private Color DARK_RED;  
 
     /**
      * This constructor adds several GUI components to the panel and listens for
@@ -54,6 +57,7 @@ public class UserInterface1 extends JPanel implements ActionListener {
         this.classicsMenu = classicsMenu;
 
         setLayout(c1);
+        DARK_RED = new Color(0xc0, 0x00, 0x00);
         add(cards, "MadLib");
         cards.add(firstCard, "Menu");
         cards.add(secondCard, "Replace Nouns");
@@ -95,7 +99,7 @@ public class UserInterface1 extends JPanel implements ActionListener {
         // plus three to compensate for the instructions and "Children's Literature" &
         // "Classic Literature" labels
         int numMenuRows = (childrensMenu.size() + classicsMenu.size() + 3);
-        litMenu.setLayout(new GridLayout(numMenuRows, 1, 3, 10));
+        litMenu.setLayout(new GridLayout(numMenuRows, 1, 3, 1));
         litMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         firstCard.add(litMenu, BorderLayout.WEST);
 
@@ -107,7 +111,10 @@ public class UserInterface1 extends JPanel implements ActionListener {
         ButtonGroup group = new ButtonGroup();
 
         // Displays the Children's Literature menu options
-        JLabel childrenLabel = new JLabel("Children's Literature:");
+        JLabel childrenLabel = new JLabel("Children's Literature:");        
+        Font menuLabelFont = childrenLabel.getFont();
+        childrenLabel.setFont(menuLabelFont.deriveFont(menuLabelFont.getStyle() ^ Font.BOLD)); 
+        childrenLabel.setFont(menuLabelFont.deriveFont(menuLabelFont.getStyle() ^ Font.BOLD)); 
         litMenu.add(childrenLabel);
         for (int i = 1; i <= childrensMenu.size(); i++) {
             radioButton[i] = new JRadioButton(
@@ -119,6 +126,7 @@ public class UserInterface1 extends JPanel implements ActionListener {
 
         // Displays the Classic Literature menu options
         JLabel classicLabel = new JLabel("Classic Literature:");
+        classicLabel.setFont(menuLabelFont.deriveFont(menuLabelFont.getStyle() ^ Font.BOLD));
         litMenu.add(classicLabel);
         for (int j = childrensMenu.size() + 1; j <= (childrensMenu.size() + classicsMenu.size()); j++) {
             radioButton[j] = new JRadioButton(classicsMenu.get(j - childrensMenu.size() - 1).getLitTitle() + " by"
@@ -147,17 +155,25 @@ public class UserInterface1 extends JPanel implements ActionListener {
         // button
         playButton = new JButton();
         playButton.setLayout(new BorderLayout());
+        playButton.setBackground(DARK_RED);
+        playButton.setOpaque(true);
+        //playButton.setBorderPainted(false);
         JLabel label1 = new JLabel("PLAY MAD-LIBS");
         JLabel label2 = new JLabel("with selected passage");
         label1.setHorizontalAlignment(SwingConstants.CENTER);
         label2.setHorizontalAlignment(SwingConstants.CENTER);
         playButton.add(BorderLayout.NORTH, label1);
         playButton.add(BorderLayout.SOUTH, label2);
-
+        
+        JPanel buttonArea = new JPanel();
+        JPanel blankPanel = new JPanel();
+        buttonArea.setLayout(new GridLayout(0, 3));
+        buttonArea.add(blankPanel);
+        buttonArea.add(playButton);
+ 
         // Adds action listener to the playButton
         playButton.addActionListener(this);
-        firstCard.add(playButton, BorderLayout.SOUTH);
-
+        firstCard.add(buttonArea, BorderLayout.SOUTH);
     }
 
     /**
@@ -226,9 +242,20 @@ public class UserInterface1 extends JPanel implements ActionListener {
                 wordField[i] = new JTextField(10);
                 wordEntry.add(wordField[i]);
             }
-            continueButton = new JButton("CONTINUE");
+            
+            // Formats and positions a continue button at the bottom of the list
+            continueButton = new JButton("CONTINUE");  
+            continueButton.setBackground(DARK_RED);
+            continueButton.setOpaque(true);
+            JPanel buttonArea = new JPanel();
+            JPanel blankPanel = new JPanel();
+            
+            wordEntry.add(buttonArea);
+            buttonArea.setLayout(new GridLayout(0, 3));           
+            buttonArea.add(blankPanel);
+            buttonArea.add(continueButton);
             continueButton.addActionListener(this);
-            wordEntry.add(continueButton);
+            
         }
         else {
             cardCounter++;
@@ -274,16 +301,23 @@ public class UserInterface1 extends JPanel implements ActionListener {
             // BorderLayout and
             // nests another BorderLayout within the button in order to display a 2-line
             // button
-            playAgainButton = new JButton();
-            playAgainButton.setLayout(new BorderLayout());
-            JLabel label1 = new JLabel("PLAY AGAIN");
-            label1.setHorizontalAlignment(SwingConstants.CENTER);
-            playAgainButton.add(BorderLayout.NORTH, label1);
-           
-    
+            
+            
+            
+            playAgainButton = new JButton("PLAY AGAIN");
+            playAgainButton.setBackground(DARK_RED);
+            playAgainButton.setOpaque(true);
+            JPanel buttonArea = new JPanel();
+            JPanel blankPanel = new JPanel();
+            eighthCard.add(buttonArea, BorderLayout.SOUTH);
+            
+            buttonArea.setLayout(new GridLayout(0, 3));           
+            buttonArea.add(blankPanel);
+            buttonArea.add(playAgainButton);
+            
             // Adds action listener to the playButton
             playAgainButton.addActionListener(this);
-            eighthCard.add(playAgainButton, BorderLayout.SOUTH);
+            
         
             firstStart++;
         }
@@ -297,9 +331,15 @@ public class UserInterface1 extends JPanel implements ActionListener {
     }
 
     private void formatTitle(JPanel card, String titleString) {
+        
+                    
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(Color.GRAY, 3));
-        JLabel title = new JLabel(titleString);
+        Font f = new Font("Calibri",Font.ITALIC | Font.BOLD,30);
+        JLabel title = new JLabel(titleString);      
+        title.setFont(f);
+        
+        title.setForeground(DARK_RED);        
         title.setHorizontalAlignment(SwingConstants.CENTER);
         title.setPreferredSize(new Dimension(STANDARD_WIDTH, 50));
         card.add(title, BorderLayout.NORTH);
