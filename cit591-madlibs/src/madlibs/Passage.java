@@ -43,50 +43,26 @@ public class Passage {
 	private class Word {
 		// The actual word, as a string
 		private String text;
-		// The blank space (including new lines) that comes before this word;
-		private String precedingBlanks;
 		// The blank space (including new lines?) that comes after this word;
 		private String trailingBlanks;
 		// The part of speech tag;
 		private String posTag;
+		// Used to decide if the first character should be capitilized or not
+		private int sentenceIndex;
 		private boolean replaced = false;
 		/**
 		 * Constructs a new Word object from the supplied parameters.
-		 * @param string The actual word
-		 * @param beforeBlank The part of speech tag;
+		 * @param word The actual text of the word
+		 * @param posTag The part of speech as this word, using the tag from Penn Treebank
+		 * @param trailingBlanks The white space characters that follow this word
+		 * @param sentenceIndex The position of this word in its sentence.
+		 * 
 		 */
-		Word (String text, String posTag) {
+		Word (String text, String posTag, String trailingBlanks, int sentenceIndex) {
 			this.text = text;
 			this.posTag = posTag;
-			// It is unfortunate that the ".after()" and ".before()" methods
-			// from the Sentence API don't appear to return the actual whitespace.
-			// I would expect newlines to be counted as whitespace, and don't expect
-			// a blank to appear before a period.
-			// Guess we will need to figure out on own.
-			trailingBlanks = "";
-			if (!isPunctuation()) {
-				precedingBlanks = " ";
-			}
-			else {
-				precedingBlanks = "";
-			}
-		}
-		// Alternative constructor that provides sets preceding blanks to an empty string
-		// and instead relies on trailing blanks;
-		Word (String text, String posTag, String trailingBlanks) {
-			this(text, posTag);
-			this.precedingBlanks = "";
+			this.sentenceIndex = sentenceIndex;
 			this.trailingBlanks = trailingBlanks;
-		}
-		
-		private boolean isPunctuation() {
-			if (posTag.equals(",") || posTag.equals(".") || posTag.equals("'") ||
-					posTag.equals("\"") || posTag.equals(":")) {
-				return true;
-			}
-			else {
-				return false;
-			}
 		}
 		
 		private void setReplaced(boolean replaced) {
@@ -98,7 +74,13 @@ public class Passage {
 		}
 		
 		public String toString() {
-			return precedingBlanks + text + trailingBlanks;
+			// If this is the first character of the sentence, capitalize the first character
+			if (sentenceIndex == 0) {
+				return text.substring(0, 1).toUpperCase() + text.substring(1) + trailingBlanks;
+			}
+			else {
+				return text + trailingBlanks;
+			}
 		}
 		
 		/*
@@ -146,12 +128,11 @@ public class Passage {
 		
 		int passageIndex = 0;
 		for (Sentence sentence: document.sentences()) {
-			int sentenceIndex = 0;
 			for (int i = 0; i < sentence.length(); i++) {
 				String word = sentence.originalText(i);
 				String posTag = sentence.posTag(i);
 				String trailingBlanks = sentence.after(i);
-				originalWords.add(new Word(word, posTag, trailingBlanks));
+				originalWords.add(new Word(word, posTag, trailingBlanks, i));
 				// Get the different parts of speech, adding to appropriate object
 				posTags.add(posTag);
 				
@@ -173,7 +154,6 @@ public class Passage {
 				else if (posTag.equals("VBN")) {
 					edVerbs.add(passageIndex);
 				};
-				sentenceIndex++;
 				passageIndex++;
 			};
 		}
