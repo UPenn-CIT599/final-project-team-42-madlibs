@@ -203,7 +203,7 @@ public class Passage {
 		ArrayList<Integer[]> indexesList = new ArrayList<Integer[]>();
 		for (Word word : updatedWords) {
 			if (word.isReplaced()) {
-				indexesList.add(new Integer[] {index, index + word.getText().length() - 1});
+				indexesList.add(new Integer[] {index, index + word.getText().length() });
 			}
 			// The length method includes the trailing blank spaces.
 			index += word.length();

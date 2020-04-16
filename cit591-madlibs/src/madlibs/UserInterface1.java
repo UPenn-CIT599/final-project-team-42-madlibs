@@ -1,6 +1,10 @@
 package madlibs;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -295,7 +299,6 @@ public class UserInterface1 extends JPanel implements ActionListener {
             
             eighthCard.add(new JScrollPane(text2), BorderLayout.CENTER);
             
-            System.out.println("finished result page layout setup");
             
             // Places a "PLAY AGAIN button into the bottom cell of the overall
             // BorderLayout and
@@ -322,11 +325,20 @@ public class UserInterface1 extends JPanel implements ActionListener {
             firstStart++;
         }
         
-        // Displays Mad-Lib updatedText in the text field 
-        String updatedText = passage.getUpdatedText();
-        //System.out.println("updated text :" + updatedText);
-        text2.setText(updatedText);
-        
+        // Displays Mad-Lib updatedText in the text field with the replaced words highlighted
+        Highlighter highlighter = text2.getHighlighter();
+        String updatedText = passage.getUpdatedText();        
+        text2.setText(updatedText);       
+        int[][] ReplacedIndexes = passage.getIndexesOfReplacements();
+        for (int i = 0; i < ReplacedIndexes.length; i++) {
+           
+            try {             
+                highlighter.addHighlight(ReplacedIndexes[i][0], ReplacedIndexes[i][1], DefaultHighlighter.DefaultPainter);
+            } catch (BadLocationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
         
     }
 
