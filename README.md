@@ -22,11 +22,9 @@ Clone the repository and run *MadLib.java*. The entire set of files including te
 Maven is the build automation tool and uses pom.xml file which provides the configuration details for the project.
 
 To set up project and run program in Eclipse:  
-1) First need to clone GitHub repository on local machine. From terminal window, run the following command
+1) First need to clone GitHub repository on local machine. From terminal window, run the following command  
 git remote set-url origin https://github.com/UPenn-CIT599/final-project-team-42-madlibs.git
-
-To add project to Eclipse:  
-2) Create new project  
+2) To add project to Eclipse, create new project  
 File > Open Projects from File System  
 3) From within Eclipse, navigate to and select project directory location  
 
