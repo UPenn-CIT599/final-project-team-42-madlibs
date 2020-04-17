@@ -29,7 +29,7 @@ File > Open Projects from File System
 <img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/Eclipse_-_screenshot_1.jpg" width="270"/>
 3) From within Eclipse, navigate to and select project directory location  
 <img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/Eclipse_-_screenshot_2.jpg" height="120" />  
-4) This will result in the following folders and file structure. The Mad Lib application is executed by running **MadLib.java**.    
+4) This will result in the following folders and file structure. The Mad Lib application is executed by running MadLib.java.  
 <img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/Eclipse_-_screenshot_3.jpg" width="270" />
 
 
