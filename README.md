@@ -26,7 +26,9 @@ To set up project and run program in Eclipse:
 git remote set-url origin https://github.com/UPenn-CIT599/final-project-team-42-madlibs.git
 2) To add project to Eclipse, create new project  
 File > Open Projects from File System  
+<img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/Eclipse_-_screenshot_1.jpg" width="220"/>
 3) From within Eclipse, navigate to and select project directory location  
+<img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/Eclipse_-_screenshot_2.jpg" height="120" />
 
 
 
