@@ -36,7 +36,7 @@ public class Passage {
 	
 	/**
 	 * For storing important information about a word, such as the actual word,
-	 * the blank space before and after, and the total length (including preceding
+	 * trailing white spaces, and the total length (including preceding
 	 * and proceding blankspace. 
 	 *
 	 */
