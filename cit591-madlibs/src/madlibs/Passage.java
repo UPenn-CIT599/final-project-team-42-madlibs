@@ -161,7 +161,6 @@ public class Passage {
 	
 		this.originalText = originalText;
 		originalWords = new ArrayList<Word>();
-		posTags = new ArrayList<String>();
 		
 		singularNouns = new PartOfSpeechTracker();		pluralNouns = new PartOfSpeechTracker();
 		adverbs = new PartOfSpeechTracker();
@@ -179,8 +178,6 @@ public class Passage {
 				String trailingBlanks = sentence.after(i);
 				originalWords.add(new Word(word, posTag, trailingBlanks, i));
 				// Get the different parts of speech, adding to appropriate object
-				posTags.add(posTag);
-				
 				if (posTag.equals("NN") || posTag.equals("NNP")) {
 					singularNouns.add(word, passageIndex);
 				}
@@ -272,10 +269,10 @@ public class Passage {
 	}
 	
 	/**
-	 * Returns the indexes where the specified part of speech can be found.
+	 * Returns the requested PartOfSpeechTracker object.
 	 * @param partOfSpeech A valid part of speech from the PartOfSpeech Enum
-	 * @return the indexes where the specified part of speech can be found,
-	 * as an Integer array 
+	 * @return A PartOfSpeechTracker objects that contains the indexes for the
+	 * specified PartOfSpeech
 	 */
 	public PartOfSpeechTracker getPartOfSpeech(PartOfSpeech partOfSpeech) {
 		switch(partOfSpeech) {

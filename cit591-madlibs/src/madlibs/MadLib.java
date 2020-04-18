@@ -111,29 +111,6 @@ public class MadLib {
         });
     }
        
-       
-   /**
-    * promptForReplacement is a temporary method that demonstrates how to use the passage object
-    * to determine which indexes should be replaced, prompt the user for the 
-    * right number of replacement words, and then updated the passage with the
-    * supplied words.
-    * @param passage
-    * @param partOfSpeech
-    */
-    public Integer[] promptForReplacement(Passage passage, PartOfSpeech partOfSpeech) {
-    	Integer[] indexesToSample = passage.getIndexes(partOfSpeech);	
-    	Integer[] indexesToReplace = Passage.sample(
-    		indexesToSample,
-    		partOfSpeech.getPercent(),
-    		partOfSpeech.getMinN(),
-    		partOfSpeech.getMaxN()
-    	);
-    	
-    	return indexesToReplace;
-    }
-    
-    
-    
     /**
      * litReader method takes in the file name of the literary passage the player selects from the Mad-Lib menu, reads the file and 
      * returns a string containing the passage.

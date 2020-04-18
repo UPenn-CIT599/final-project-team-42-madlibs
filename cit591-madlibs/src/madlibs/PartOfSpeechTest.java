@@ -6,9 +6,10 @@ import org.junit.jupiter.api.Test;
 
 class PartOfSpeechTest {
 
+	// Simple test, since screwed up when developing
 	@Test
 	void compareMaxMinTest() {
-		assert(PartOfSpeech.SINGULAR_NOUN.getMaxN() >= PartOfSpeech.SINGULAR_NOUN.getMinN());
+		assert(PartOfSpeech.SINGULAR_NOUN.getDesiredPercent() > 0);
 	}
 
 }

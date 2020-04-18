@@ -3,7 +3,6 @@ package madlibs;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
 
 class PassageTest {
 	String shortText = "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.";
