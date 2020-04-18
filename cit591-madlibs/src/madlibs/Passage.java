@@ -25,19 +25,18 @@ public class Passage {
 	/* TODO: consider combining with the PartOfSpeech enum somehow (would involve
 	 * making it a "regular" class instead of an enum. 
 	 */
-	private ArrayList<Integer> singularNouns;
-	private ArrayList<Integer> pluralNouns;
-	private ArrayList<Integer> adverbs;
-	private ArrayList<Integer> adjectives;
-	private ArrayList<Integer> ingVerbs;
-	private ArrayList<Integer> edVerbs;
+	private PartOfSpeechTracker singularNouns;
+	private PartOfSpeechTracker pluralNouns;
+	private PartOfSpeechTracker adverbs;
+	private PartOfSpeechTracker adjectives;
+	private PartOfSpeechTracker ingVerbs;
+	private PartOfSpeechTracker edVerbs;
 	
 	private String originalText;
 	
 	/**
 	 * For storing important information about a word, such as the actual word,
-	 * the blank space before and after, and the total length (including preceding
-	 * and proceding blankspace. 
+	 * trailing white spaces, and the total length (including trailing whitespace). 
 	 *
 	 */
 	private class Word {
@@ -45,9 +44,7 @@ public class Passage {
 		private String text;
 		// The blank space (including new lines?) that comes after this word;
 		private String trailingBlanks;
-		// The part of speech tag;
-		private String posTag;
-		// Used to decide if the first character should be capitilized or not
+		// Used to decide if the first character should be capitalized or not
 		private int sentenceIndex;
 		private boolean replaced = false;
 		/**
@@ -60,7 +57,6 @@ public class Passage {
 		 */
 		Word (String text, String posTag, String trailingBlanks, int sentenceIndex) {
 			this.text = text;
-			this.posTag = posTag;
 			this.sentenceIndex = sentenceIndex;
 			this.trailingBlanks = trailingBlanks;
 		}
@@ -86,7 +82,7 @@ public class Passage {
 		/*
 		 * Get the length of this word, including the blank spaces.
 		 */
-		public int length() {
+		private int length() {
 			return toString().length();
 		}
 		
@@ -94,16 +90,67 @@ public class Passage {
 		 * Update the actual string part of the word with the new string
 		 * @param text
 		 */
-		public void setText(String text) {
+		private void setText(String text) {
 			this.text = text;
 		}
 		/**
 		 * Update the actual string part of the word with the new string
 		 * @param text
 		 */
-		public String getText() {
+		private String getText() {
 			return text;
 		}
+	}
+	
+	// For tracking the indexes of the different parts of speech
+	class PartOfSpeechTracker {
+		// Keys are the string of original words, values are indexes where this word can be found.
+		// Keys but not correspond to current word, if replacement had been done
+		private HashMap<String, ArrayList<Integer>> indexLookup;
+		PartOfSpeechTracker() {
+			indexLookup = new HashMap<String, ArrayList<Integer>>();
+		}
+		
+		private void add(String word, int index) {
+			if(!indexLookup.containsKey(word)) {
+				indexLookup.put(word, new ArrayList<Integer>());
+			}
+			indexLookup.get(word).add(index);
+		}
+		
+		/**
+		 * Return the indexes where the corresponding parts of speech can be
+		 * found in the passage as a flat Integer array.
+		 * @return An 1d Integer array of the indexes that belong to this
+		 * part of speech, sorted.
+		 */
+		public Integer[] toFlatArray() {
+			ArrayList<Integer> allIndexes = new ArrayList<Integer>();
+			for (String word : indexLookup.keySet()) {
+				ArrayList<Integer> theseIndexes = indexLookup.get(word);
+				for (Integer index : theseIndexes) {
+					allIndexes.add(index);
+				}
+			}
+			Collections.sort(allIndexes);
+			return allIndexes.toArray(new Integer[allIndexes.size()]);
+		}
+		/**
+		 * Return the indexes where the corresponding parts of speech can be
+		 * found in the passage as a 2d Integer array.
+		 * @return A 2d Integer array of the indexes that belong to this 
+		 * part of speech.
+		 */
+		public Integer[][] toNestedArray() {
+			Integer[][] allIndexes = new Integer[indexLookup.values().size()][];
+			int i = 0;
+			for (ArrayList<Integer> indexes : indexLookup.values()) {
+				allIndexes[i] = indexes.toArray(new Integer[indexes.size()]);
+				i++;
+			}
+			return allIndexes;
+		}
+		
 	}
 	
 	/** Constructs a new Passage object from the supplied text.
@@ -115,14 +162,12 @@ public class Passage {
 	
 		this.originalText = originalText;
 		originalWords = new ArrayList<Word>();
-		posTags = new ArrayList<String>();
 		
-		singularNouns = new ArrayList<Integer>();
-		pluralNouns = new ArrayList<Integer>();
-		adverbs = new ArrayList<Integer>();
-		adjectives = new ArrayList<Integer>();
-		edVerbs = new ArrayList<Integer>();
-		ingVerbs = new ArrayList<Integer>();
+		singularNouns = new PartOfSpeechTracker();		pluralNouns = new PartOfSpeechTracker();
+		adverbs = new PartOfSpeechTracker();
+		adjectives = new PartOfSpeechTracker();
+		edVerbs = new PartOfSpeechTracker();
+		ingVerbs = new PartOfSpeechTracker();
 		
 		Document document = new Document(originalText);
 		
@@ -134,25 +179,23 @@ public class Passage {
 				String trailingBlanks = sentence.after(i);
 				originalWords.add(new Word(word, posTag, trailingBlanks, i));
 				// Get the different parts of speech, adding to appropriate object
-				posTags.add(posTag);
-				
 				if (posTag.equals("NN") || posTag.equals("NNP")) {
-					singularNouns.add(passageIndex);
+					singularNouns.add(word, passageIndex);
 				}
 				else if (posTag.equals("NNS") || posTag.equals("NNPS")) {
-					pluralNouns.add(passageIndex);
+					pluralNouns.add(word, passageIndex);
 				}
 				else if (posTag.equals("JJ")) {
-					adjectives.add(passageIndex);
+					adjectives.add(word, passageIndex);
 				}
 				else if (posTag.equals("RB")) {
-					adverbs.add(passageIndex);
+					adverbs.add(word, passageIndex);
 				}
 				else if (posTag.equals("VBG")) {
-					ingVerbs.add(passageIndex);
+					ingVerbs.add(word, passageIndex);
 				}
 				else if (posTag.equals("VBN")) {
-					edVerbs.add(passageIndex);
+					edVerbs.add(word, passageIndex);
 				};
 				passageIndex++;
 			};
@@ -191,14 +234,6 @@ public class Passage {
 	 * the second element give the place where the word ends.
 	 */
 	public int[][] getIndexesOfReplacements() {
-		/*
-		 * Flow:
-		 * loop over words? check length? if a replacement then...
-		 * Need to track punctuation. Maybe need a new data structure?
-		 * Word object? Has length.. Punctuation? New line..  
-		 */
-		// Just an example case
-		// For keeping track of index.
 		Integer index = 0;
 		ArrayList<Integer[]> indexesList = new ArrayList<Integer[]>();
 		for (Word word : updatedWords) {
@@ -220,129 +255,44 @@ public class Passage {
 	/**
 	 * Updates the words at the specified indexes with the supplied words.
 	 * @param replacementWords The new words that will overwrite the original words
-	 * @param indexes The indexes of the original words that should be replaced
+	 * @param indexes The indexes of the original words that should be replaced.
+	 * This is an integer array of integers, because can replace indexes with the
+	 * same word at the same time.
 	 */
-	public void replaceWords(String[] replacementWords, Integer[] indexes) {
-		// TODO: Verify that they have the same length?
-		for (int i = 0; i < replacementWords.length; i++) {
-			Word wordToUpdate = updatedWords.get(indexes[i]);
-			wordToUpdate.setText(replacementWords[i]);
-			wordToUpdate.setReplaced(true);
+	public void replaceWords(String[] replacementWords, Integer[][] indexes) {
+		for (int i = 0; i < indexes.length; i++) {
+			for (int j = 0; j < indexes[i].length; j++) {
+				Word wordToUpdate = updatedWords.get(indexes[i][j]);
+				wordToUpdate.setText(replacementWords[i]);
+				wordToUpdate.setReplaced(true);
+			}
 		}
 	}
 	
 	/**
-	 * Helper method for converting an Integer ArrayList to an Array
-	 * @param list
-	 * @return
-	 */
-	private Integer[] toArray(ArrayList<Integer> list) {
-		return list.toArray(new Integer[list.size()]);
-	}
-	
-	/**
-	 * Returns the indexes where the specified part of speech can be found.
+	 * Returns the requested PartOfSpeechTracker object.
 	 * @param partOfSpeech A valid part of speech from the PartOfSpeech Enum
-	 * @return the indexes where the specified part of speech can be found,
-	 * as an Integer array 
+	 * @return A PartOfSpeechTracker objects that contains the indexes for the
+	 * specified PartOfSpeech
 	 */
-	public Integer[] getIndexes(PartOfSpeech partOfSpeech) {
+	public PartOfSpeechTracker getPartOfSpeech(PartOfSpeech partOfSpeech) {
 		switch(partOfSpeech) {
 		case SINGULAR_NOUN:
-			return toArray(singularNouns);
+			return singularNouns;
 		case PLURAL_NOUN:
-			return toArray(pluralNouns);
+			return pluralNouns;
 		case ADJECTIVE:
-			return toArray(adjectives);
+			return adjectives;
 		case ADVERB:
-			return toArray(adverbs);
+			return adverbs;
 		case ED_VERB:
-			return toArray(edVerbs);
+			return edVerbs;
 		case ING_VERB:
-			return toArray(ingVerbs);
+			return ingVerbs;
 		// This should never happen...
 		default:
 			throw new IllegalArgumentException("Invalid part of speech");
 		}
 	}
 
-	/**
-	 * Samples from provided indexes based on the supplied criteria. A random seed is
-	 * required.
-	 * @param indexesToSample The indexes to sample from
-	 * @param percent The percent of words that should be selected for replacement
-	 * @param minN The minimum number of words that should be selected for replacement
-	 * @param maxN The maximum number of words that should be selected for replacement
-	 * @param seed The random seed
-	 * @return
-	 */
-	public static Integer[] sample(
-			Integer[] indexesToSample,
-			double percent,
-			int minN,
-			int maxN,
-			long seed
-			) {
-		
-		// Some checks on parameters
-		if (minN < 0) {
-			throw new IllegalArgumentException("Need to request a minimum of at" +
-				"least one word to replace ");
-		}
-		if (minN > maxN) {
-			throw new IllegalArgumentException("Minimum number of requested words is greater" +
-				"than maximum!");
-		}
-		if (percent <= 0 || percent > 1.0) {
-			throw new IllegalArgumentException("The percentage of words to replace" +
-				"needs to be greater than 0 and no more than 1.0 (100%)");
-		}
-		int numToSample = (int) (percent * indexesToSample.length);
-		if (numToSample < minN) {
-			numToSample = minN;
-		}
-		if (numToSample > maxN) {
-			numToSample = maxN;
-		}
-		if (numToSample > indexesToSample.length) {
-			return indexesToSample;
-		}
-	
-		Integer[] sampledIndexes = new Integer[numToSample]; 
-		
-		Random random = new Random(seed);
-		// Determine spacing
-		int stepSize = indexesToSample.length / numToSample;
-		
-		// Determine starting index
-		int currentIndex = random.nextInt(indexesToSample.length);
-		for (int i = 0; i < numToSample; i++) {
-			sampledIndexes[i] = indexesToSample[currentIndex];
-			currentIndex += stepSize;
-			// If past end of available indexes, start from beginning
-			if (currentIndex >= indexesToSample.length) {
-				currentIndex -= indexesToSample.length;
-			}
-		}
-		return sampledIndexes;
-	}
-	
-	/**
-	 * Samples from provided indexes based on the supplied criteria. No random seed is
-	 * required.
-	 * @param indexesToSample The indexes to sample from
-	 * @param percent The percent of words that should be selected for replacement
-	 * @param minN The minimum number of words that should be selected for replacement
-	 * @param maxN The maximum number of words that should be selected for replacement
-	 * @param seed The random seed
-	 * @return
-	 */
-	public static Integer[] sample(
-			Integer[] indexesToSample,
-			double percent,
-			int minN,
-			int maxN
-			) {
-		return sample(indexesToSample, percent, minN, maxN, new Random().nextInt());
-	}
 }

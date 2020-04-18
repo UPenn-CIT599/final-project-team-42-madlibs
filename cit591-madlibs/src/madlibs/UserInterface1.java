@@ -44,7 +44,7 @@ public class UserInterface1 extends JPanel implements ActionListener {
     private MadLib m = new MadLib();
     private int numOfWords;
     private String[] replacementWords;
-    Integer[] indexesToReplace;
+    Integer[][] indexesToReplace;
     
     private JTextArea text2;
     private JButton playAgainButton;
@@ -233,9 +233,16 @@ public class UserInterface1 extends JPanel implements ActionListener {
         wordEntry.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         wordCard.add(wordEntry, BorderLayout.CENTER);
     }
-
+    
+	/* Get the indexes for all requested parts of speech and sample them and then
+	 * prompt user for correct number of replacements.
+	 */
     private void requestWords(PartOfSpeech partOfSpeech) {
-        indexesToReplace = m.promptForReplacement(passage, partOfSpeech);
+
+        Integer[][] indexesToSample = passage.getPartOfSpeech(partOfSpeech).toNestedArray();
+        WeightedSampler sampler = new WeightedSampler(indexesToSample);
+        indexesToReplace = sampler.sample(partOfSpeech.getDesiredPercent());
+        
         numOfWords = indexesToReplace.length;
         if (indexesToReplace.length > 0) {
             JLabel instructions = new JLabel("Enter " + partOfSpeech.getDescription());
