@@ -11,9 +11,9 @@ the game) is based on literary passages from Project Gutenberg. All files (i.e. 
 are provided in GitHub repository.
 
 Primary Project Assignments:
-Manage Input:  Brenda
-Manage Passage Processing:  Ross
-Manage User Interface:  Paul
+Manage input, UI integration with passage processing:  Brenda
+Manage passage processing:  Ross
+Manage user interface:  Paul
 
 GitHub repository:
 https://github.com/UPenn-CIT599/final-project-team-42-madlibs
