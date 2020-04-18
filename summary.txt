@@ -1,0 +1,20 @@
+Project:  Literature Mad-Libs Game
+General Project Area: Natural Language Processing
+
+Team:  Ross Beck-MacNeil, Brenda Moss, Paul Lysander
+
+Project Description:
+Mad Libs is literature (word) game based on parts-of-speech word replacement. This project implements Mad Libs using natural language 
+processing library (Stanford CoreNLP). The NLP library provides API for syntactic analysis and parsing of text into parts of speech, 
+which is the critical component for Mad Libs. Player interacts with the game via GUI implemented in Swing. Data input (text for playing
+the game) is based on literary passages from Project Gutenberg. All files (i.e. source code, literary text) for running the program 
+are provided in GitHub repository.
+
+Primary Project Assignments:
+Manage Input:  Brenda
+Manage Passage Processing:  Ross
+Manage User Interface:  Paul
+
+GitHub repository:
+https://github.com/UPenn-CIT599/final-project-team-42-madlibs
+
