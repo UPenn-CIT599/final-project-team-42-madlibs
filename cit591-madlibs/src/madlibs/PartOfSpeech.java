@@ -9,7 +9,7 @@ public enum PartOfSpeech {
 	SINGULAR_NOUN("singular nouns", 0.2),
 	PLURAL_NOUN("plural nouns", 0.2),
 	ADJECTIVE("adjectives", 0.33),
-	ADVERB("adverbs", 0.33),
+	ADVERB("adverbs", 0.2),
 	ED_VERB("past tense verbs ending in 'ed'", 0.33),
 	ING_VERB("present tense verb ending in 'ing'", 0.33);
 	
