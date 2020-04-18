@@ -2,14 +2,20 @@ package madlibs;
 
 import java.util.*;
 
-// Samples based on numer of occurences
+/**
+ * This class can sample a 2d array of Integers so that the percentage of elements
+ * contained within the sampled Integer arrays will be equal to or greater than the
+ * requested percentage.
+ * 
+ *
+ */
 public class WeightedSampler {
 	
 	ArrayList<Integer[]> indexesToSample;
 	int totalNumberOfIndexes = 0;
 	
 	WeightedSampler(Integer[][] indexesToSample) {
-		// Good way of ensuring that don't mutate original object
+		// Creating an ArrayList helps ensure that we don't mutate original object
 		this.indexesToSample = new ArrayList<Integer[]>();
 		for (Integer[] wordIndexes : indexesToSample) {
 			this.indexesToSample.add(wordIndexes);
@@ -20,7 +26,19 @@ public class WeightedSampler {
 	
 	// Always get up to or above desired percent
 	// Need a seed.... (later)
-	private Integer[][] sample(double desiredPercent, Random random) {
+	/** 
+	 * Samples 1d Integer arrays from the supplied 2d Integer array. The percentage of 
+	 * of elements contained within the chosen Integer arrays will be equal to or greater
+	 * than the requested percentage. The change of a 1d Integer array being selected is proprotional
+	 * to the total number of elements that it contains. A seed is required.
+	 * @param desiredPercent The percentage of the total elements that should be contained
+	 * within the chosen Integer arrays. The actual percentage will always be equal to or
+	 * greater than this amount.
+	 * @param seed A random seed for reproducibility purposes
+	 * @return A 2d Integer array containing the randomly selected 1d Integer arrays
+	 */
+	public Integer[][] sample(double desiredPercent, long seed) {
+		Random random = new Random(seed);
 		// Make copy so can modify without mutating original
 		ArrayList<Integer[]> indexesToSample = (ArrayList<Integer[]>) this.indexesToSample.clone();
 		ArrayList<Integer[]> sampledIndexes = sample(
@@ -31,12 +49,19 @@ public class WeightedSampler {
 		
 		return sampledIndexes.toArray(new Integer[sampledIndexes.size()][]);
 	}
-	
-	public Integer[][] sample(double desiredPercent, long seed) {
-		Random random = new Random(seed);
-		return sample(desiredPercent, random);
+	/**
+	 * Samples 1d Integer arrays from the supplied 2d Integer array. The percentage of 
+	 * of elements contained within the chosen Integer arrays will be equal to or greater
+	 * than the requested percentage. The change of a 1d Integer array being selected is proprotional
+	 * to the total number of elements that it contains
+	 * @param desiredPercent The percentage of the total elements that should be contained
+	 * within the chosen Integer arrays. The actual percentage will always be equal to or
+	 * greater than this amount.
+	 * @return A 2d Integer array containing the randomly selected 1d Integer arrays
+	 */
+	public Integer[][] sample(double desiredPercent) {;
+		return sample(desiredPercent, new Random().nextLong());
 	}
-	
 	private ArrayList<Integer[]> sample(
 		ArrayList<Integer[]> indexesToSample,
 		double desiredPercent,
@@ -71,6 +96,7 @@ public class WeightedSampler {
 		desiredPercent -= currentWeight;
 		
 		sampledIndexes.add(currentIndexes);
+		// Call recursively until we have met our desired percentage
 		if (desiredPercent > 0) {
 			sampledIndexes.addAll(
 				sample(

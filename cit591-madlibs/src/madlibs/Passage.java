@@ -142,10 +142,11 @@ public class Passage {
 		 * part of speech.
 		 */
 		public Integer[][] toNestedArray() {
-			Integer[][] allIndexes = new Integer[indexLookup.keySet().size()][];
+			Integer[][] allIndexes = new Integer[indexLookup.values().size()][];
 			int i = 0;
 			for (ArrayList<Integer> indexes : indexLookup.values()) {
 				allIndexes[i] = indexes.toArray(new Integer[indexes.size()]);
+				i++;
 			}
 			return allIndexes;
 		}
@@ -294,83 +295,4 @@ public class Passage {
 		}
 	}
 
-	/**
-	 * Samples from provided indexes based on the supplied criteria. A random seed is
-	 * required.
-	 * @param indexesToSample The indexes to sample from
-	 * @param percent The percent of words that should be selected for replacement
-	 * @param minN The minimum number of words that should be selected for replacement
-	 * @param maxN The maximum number of words that should be selected for replacement
-	 * @param seed The random seed
-	 * @return
-	 */
-	public static Integer[] sample(
-			Integer[] indexesToSample,
-			double percent,
-			int minN,
-			int maxN,
-			long seed
-			) {
-		
-		// Some checks on parameters
-		if (minN < 0) {
-			throw new IllegalArgumentException("Need to request a minimum of at" +
-				"least one word to replace ");
-		}
-		if (minN > maxN) {
-			throw new IllegalArgumentException("Minimum number of requested words is greater" +
-				"than maximum!");
-		}
-		if (percent <= 0 || percent > 1.0) {
-			throw new IllegalArgumentException("The percentage of words to replace" +
-				"needs to be greater than 0 and no more than 1.0 (100%)");
-		}
-		int numToSample = (int) (percent * indexesToSample.length);
-		if (numToSample < minN) {
-			numToSample = minN;
-		}
-		if (numToSample > maxN) {
-			numToSample = maxN;
-		}
-		if (numToSample > indexesToSample.length) {
-			return indexesToSample;
-		}
-	
-		Integer[] sampledIndexes = new Integer[numToSample]; 
-		
-		Random random = new Random(seed);
-		// Determine spacing
-		int stepSize = indexesToSample.length / numToSample;
-		
-		// Determine starting index
-		int currentIndex = random.nextInt(indexesToSample.length);
-		for (int i = 0; i < numToSample; i++) {
-			sampledIndexes[i] = indexesToSample[currentIndex];
-			currentIndex += stepSize;
-			// If past end of available indexes, start from beginning
-			if (currentIndex >= indexesToSample.length) {
-				currentIndex -= indexesToSample.length;
-			}
-		}
-		return sampledIndexes;
-	}
-	
-	/**
-	 * Samples from provided indexes based on the supplied criteria. No random seed is
-	 * required.
-	 * @param indexesToSample The indexes to sample from
-	 * @param percent The percent of words that should be selected for replacement
-	 * @param minN The minimum number of words that should be selected for replacement
-	 * @param maxN The maximum number of words that should be selected for replacement
-	 * @param seed The random seed
-	 * @return
-	 */
-	public static Integer[] sample(
-			Integer[] indexesToSample,
-			double percent,
-			int minN,
-			int maxN
-			) {
-		return sample(indexesToSample, percent, minN, maxN, new Random().nextInt());
-	}
 }

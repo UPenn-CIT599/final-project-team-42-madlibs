@@ -19,12 +19,6 @@ class PassageTest {
 			"close by her.";
 
 	@Test
-	void sampleTenTest() {
-		Integer[] indexesToSample = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-		assertArrayEquals(new Integer[] {4, 7, 0},
-				Passage.sample(indexesToSample, 0.33, 1, 5, 20200329));
-	}
-	@Test
 	void indexesOfReplacementsTest() {
 		Passage shortPassage = new Passage(shortText);
 		shortPassage.replaceWords(
@@ -74,6 +68,13 @@ class PassageTest {
 		Passage shortPassage = new Passage(shortText);
 		Integer[] expectedIndexes = {5, 13, 18};
 		assertArrayEquals(expectedIndexes, shortPassage.getPartOfSpeech(PartOfSpeech.SINGULAR_NOUN).toFlatArray());
+	}
+	//Testing that the nested part works
+	@Test
+	void getNestedIndexesOfSingularNounsShortTest() {
+		Passage shortPassage = new Passage(shortText);
+		Integer[][] expectedIndexes = {{5}, {13}, {18}};
+		assertArrayEquals(expectedIndexes, shortPassage.getPartOfSpeech(PartOfSpeech.SINGULAR_NOUN).toNestedArray());
 	}
 	@Test
 	void getIndexesOfAdverbsShortTest() {
