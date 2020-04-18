@@ -32,7 +32,7 @@ class PassageTest {
 			new String[] {"Alice Cooper", "Smart Car", "angriest"},
 			new Integer[][] {{2}, {5}, {17}}
 		);
-		int[][] expectedIndexes = new int[][] {{6, 17}, {24, 32}, {94, 101}}; 
+		int[][] expectedIndexes = new int[][] {{6, 18}, {24, 33}, {94, 102}}; 
 		assertArrayEquals(expectedIndexes, shortPassage.getIndexesOfReplacements());
 	}
 	@Test
@@ -74,7 +74,7 @@ class PassageTest {
 	void getIndexesOfSingularNounsShortTest() {
 		Passage shortPassage = new Passage(shortText);
 		Integer[] expectedIndexes = {5, 13, 18};
-		assertArrayEquals(expectedIndexes, shortPassage.getIndexes(PartOfSpeech.SINGULAR_NOUN));
+		assertArrayEquals(expectedIndexes, shortPassage.getPartOfSpeech(PartOfSpeech.SINGULAR_NOUN).toFlatArray());
 	}
 	@Test
 	void getIndexesOfAdverbsShortTest() {
@@ -82,7 +82,7 @@ class PassageTest {
 		// Issue with parser?
 		Passage shortPassage = new Passage(shortText);
 		Integer[] expectedIndexes = {8, 14};
-		assertArrayEquals(expectedIndexes, shortPassage.getIndexes(PartOfSpeech.ADVERB));
+		assertArrayEquals(expectedIndexes, shortPassage.getPartOfSpeech(PartOfSpeech.ADVERB).toFlatArray());
 	}
 	@Test
 	void getIndexesOfAdjectivesShortTest() {
@@ -90,7 +90,7 @@ class PassageTest {
 		// since parser thinks it is a adverb
 		Passage shortPassage = new Passage(shortText);
 		Integer[] expectedIndexes = {};
-		assertArrayEquals(expectedIndexes, shortPassage.getIndexes(PartOfSpeech.ADJECTIVE));
+		assertArrayEquals(expectedIndexes, shortPassage.getPartOfSpeech(PartOfSpeech.ADJECTIVE).toFlatArray());
 	}
 	@Test
 	void getIndexesOfSingularNounsLongTest() {
@@ -101,39 +101,39 @@ class PassageTest {
 		Integer[] expectedIndexes = {
 				0, 11, 14, 19, 31, 33, 51, 54, 57,
 				70, 81, 84, 93, 97, 102, 114, 115};
-		assertArrayEquals(expectedIndexes, longPassage.getIndexes(PartOfSpeech.SINGULAR_NOUN));
+		assertArrayEquals(expectedIndexes, longPassage.getPartOfSpeech(PartOfSpeech.SINGULAR_NOUN).toFlatArray());
 	}
 	
 	@Test
 	void getIndexesOfPluralNounsLongTest() {
 		Passage longPassage = new Passage(longText);
 		Integer[] expectedIndexes = {41, 43, 59, 61, 109, 118};
-		assertArrayEquals(expectedIndexes, longPassage.getIndexes(PartOfSpeech.PLURAL_NOUN));
+		assertArrayEquals(expectedIndexes, longPassage.getPartOfSpeech(PartOfSpeech.PLURAL_NOUN).toFlatArray());
 	}
 	
 	@Test
 	void getIndexesOfAdjectivesLongTest() {
 		Passage longPassage = new Passage(longText);
 		Integer[] expectedIndexes = {6, 69, 80, 86, 88, 100, 117};
-		assertArrayEquals(expectedIndexes, longPassage.getIndexes(PartOfSpeech.ADJECTIVE));
+		assertArrayEquals(expectedIndexes, longPassage.getPartOfSpeech(PartOfSpeech.ADJECTIVE).toFlatArray());
 	}
 
 	@Test
 	void getIndexesOfAdverbsLongTest() {
 		Passage longPassage = new Passage(longText);
 		Integer[] expectedIndexes = {5, 23, 25, 72, 73, 85, 105, 112, 120};
-		assertArrayEquals(expectedIndexes, longPassage.getIndexes(PartOfSpeech.ADVERB));
+		assertArrayEquals(expectedIndexes, longPassage.getPartOfSpeech(PartOfSpeech.ADVERB).toFlatArray());
 	}
 	@Test
 	void getIndexesOfEdVerbsLongTest() {
 		Passage longPassage = new Passage(longText);
 		Integer[] expectedIndexes = {28};
-		assertArrayEquals(expectedIndexes, longPassage.getIndexes(PartOfSpeech.ED_VERB));
+		assertArrayEquals(expectedIndexes, longPassage.getPartOfSpeech(PartOfSpeech.ED_VERB).toFlatArray());
 	}
 	@Test
 	void getIndexesOfIngVerbsLongTest() {
 		Passage longPassage = new Passage(longText);
 		Integer[] expectedIndexes = {2, 8, 18, 35, 66, 95, 104, 107};
-		assertArrayEquals(expectedIndexes, longPassage.getIndexes(PartOfSpeech.ING_VERB));
+		assertArrayEquals(expectedIndexes, longPassage.getPartOfSpeech(PartOfSpeech.ING_VERB).toFlatArray());
 	}
 }

@@ -36,8 +36,7 @@ public class Passage {
 	
 	/**
 	 * For storing important information about a word, such as the actual word,
-	 * trailing white spaces, and the total length (including preceding
-	 * and proceding blankspace. 
+	 * trailing white spaces, and the total length (including trailing whitespace). 
 	 *
 	 */
 	private class Word {
@@ -45,9 +44,7 @@ public class Passage {
 		private String text;
 		// The blank space (including new lines?) that comes after this word;
 		private String trailingBlanks;
-		// The part of speech tag;
-		private String posTag;
-		// Used to decide if the first character should be capitilized or not
+		// Used to decide if the first character should be capitalized or not
 		private int sentenceIndex;
 		private boolean replaced = false;
 		/**
@@ -60,7 +57,6 @@ public class Passage {
 		 */
 		Word (String text, String posTag, String trailingBlanks, int sentenceIndex) {
 			this.text = text;
-			this.posTag = posTag;
 			this.sentenceIndex = sentenceIndex;
 			this.trailingBlanks = trailingBlanks;
 		}
@@ -86,7 +82,7 @@ public class Passage {
 		/*
 		 * Get the length of this word, including the blank spaces.
 		 */
-		public int length() {
+		private int length() {
 			return toString().length();
 		}
 		
@@ -94,14 +90,14 @@ public class Passage {
 		 * Update the actual string part of the word with the new string
 		 * @param text
 		 */
-		public void setText(String text) {
+		private void setText(String text) {
 			this.text = text;
 		}
 		/**
 		 * Update the actual string part of the word with the new string
 		 * @param text
 		 */
-		public String getText() {
+		private String getText() {
 			return text;
 		}
 	}
@@ -111,23 +107,24 @@ public class Passage {
 		// Keys are the string of original words, values are indexes where this word can be found.
 		// Keys but not correspond to current word, if replacement had been done
 		private HashMap<String, ArrayList<Integer>> indexLookup;
-		// For knowing the total number of individual words that belong to this
-		// part of speech in this passage
-		private int numOccurences = 0;
-		
 		PartOfSpeechTracker() {
 			indexLookup = new HashMap<String, ArrayList<Integer>>();
 		}
 		
-		public void add(String word, int index) {
+		private void add(String word, int index) {
 			if(!indexLookup.containsKey(word)) {
 				indexLookup.put(word, new ArrayList<Integer>());
 			}
 			indexLookup.get(word).add(index);
 		}
 		
-		// Convert a flat array of indexes - sorted. Partially so tests don't break
-		public Integer[] toArray() {
+		/**
+		 * Return the indexes where the corresponding parts of speech can be
+		 * found in the passage as a flat Integer array.
+		 * @return An 1d Integer array of the indexes that belong to this
+		 * part of speech, sorted.
+		 */
+		public Integer[] toFlatArray() {
 			ArrayList<Integer> allIndexes = new ArrayList<Integer>();
 			for (String word : indexLookup.keySet()) {
 				ArrayList<Integer> theseIndexes = indexLookup.get(word);
@@ -137,6 +134,20 @@ public class Passage {
 			}
 			Collections.sort(allIndexes);
 			return allIndexes.toArray(new Integer[allIndexes.size()]);
+		}
+		/**
+		 * Return the indexes where the corresponding parts of speech can be
+		 * found in the passage as a 2d Integer array.
+		 * @return A 2d Integer array of the indexes that belong to this 
+		 * part of speech.
+		 */
+		public Integer[][] toNestedArray() {
+			Integer[][] allIndexes = new Integer[indexLookup.keySet().size()][];
+			int i = 0;
+			for (ArrayList<Integer> indexes : indexLookup.values()) {
+				allIndexes[i] = indexes.toArray(new Integer[indexes.size()]);
+			}
+			return allIndexes;
 		}
 		
 	}
@@ -266,20 +277,20 @@ public class Passage {
 	 * @return the indexes where the specified part of speech can be found,
 	 * as an Integer array 
 	 */
-	public Integer[] getIndexes(PartOfSpeech partOfSpeech) {
+	public PartOfSpeechTracker getPartOfSpeech(PartOfSpeech partOfSpeech) {
 		switch(partOfSpeech) {
 		case SINGULAR_NOUN:
-			return singularNouns.toArray();
+			return singularNouns;
 		case PLURAL_NOUN:
-			return pluralNouns.toArray();
+			return pluralNouns;
 		case ADJECTIVE:
-			return adjectives.toArray();
+			return adjectives;
 		case ADVERB:
-			return adverbs.toArray();
+			return adverbs;
 		case ED_VERB:
-			return edVerbs.toArray();
+			return edVerbs;
 		case ING_VERB:
-			return ingVerbs.toArray();
+			return ingVerbs;
 		// This should never happen...
 		default:
 			throw new IllegalArgumentException("Invalid part of speech");
