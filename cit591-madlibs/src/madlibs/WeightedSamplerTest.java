@@ -25,5 +25,14 @@ class WeightedSamplerTest {
 		assertArrayEquals(expectedIndexes, sampler.sample(0.5, 20200418));
 		
 	}
+	@Test
+	void testEmptySample() {
+		Integer[][] indexesToSample = new Integer[0][];
+		Integer[][] expectedIndexes = new Integer[0][];
+		WeightedSampler sampler = new WeightedSampler(indexesToSample);
+		
+		assertArrayEquals(expectedIndexes, sampler.sample(0.5, 20200418));
+		
+	}
 
 }

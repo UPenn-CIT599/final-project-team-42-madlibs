@@ -70,6 +70,11 @@ public class WeightedSampler {
 		// Will populate
 		ArrayList<Integer[]> sampledIndexes = new ArrayList<Integer[]>();
 		
+		// If empty, then return an empty ArrayList
+		if (indexesToSample.size() == 0) {
+			return sampledIndexes;
+		}
+		
 		// index for looping - start randomly
 		// Subtracting 1 since will
 		int i = random.nextInt(indexesToSample.size());
