@@ -89,7 +89,7 @@ public class MadLib {
     
     /**
      * openUserInterface method opens the user interface window and passes
-     * childrensMenu and classicMenu to UserInterface1 to display menu
+     * childrensMenu and classicMenu to UserInterface to display menu
      */
     public void openUserInterface() {
         SwingUtilities.invokeLater(new Runnable() {

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 
 /**
- * UserInterface1 class implements GUI components using Swing library.
+ * UserInterface class implements GUI components using Swing library.
  * 
  * @author Team 42 - Ross Beck-MacNeil, Paul Lysander, and Brenda Moss
  */
@@ -312,13 +312,15 @@ public class UserInterface extends JPanel implements ActionListener {
             eighthCard.setLayout(new BorderLayout());
             formatTitle(eighthCard, "Literature Mad-Lib Result");
             
+            JPanel resultPanel = new JPanel();
+            resultPanel.setLayout(new GridLayout(0,2));
             // Places scrolling text area into the middle (CENTER) cell of the overall
             // BorderLayout  (note the EAST cell is empty)
-            text2 = new JTextArea();
+            text2 = new JTextArea();            
             text2.setEditable(false);
             text2.setMargin(new Insets(4, 4, 4, 4));
             
-            eighthCard.add(new JScrollPane(text2), BorderLayout.CENTER);
+            
             
             // Places scrolling text area into the middle (CENTER) cell of the overall
             // BorderLayout  (note the EAST cell is empty)
@@ -326,7 +328,11 @@ public class UserInterface extends JPanel implements ActionListener {
             text3.setEditable(false);
             text3.setMargin(new Insets(4, 4, 4, 4));
             
-            eighthCard.add(new JScrollPane(text3), BorderLayout.EAST);
+            
+            resultPanel.add(text2);
+            resultPanel.add(text3);
+            eighthCard.add(new JScrollPane(resultPanel), BorderLayout.CENTER);
+            
             
             // Places a "PLAY AGAIN button into the bottom cell of the overall
             // BorderLayout and
