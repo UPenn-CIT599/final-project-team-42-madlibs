@@ -88,26 +88,25 @@ public class MadLib {
     
     
     /**
-     * openUserInterface method opens the user interface window and passes childrensMenu and classicMenu 
-     * to UserInterface1 to display menu
+     * openUserInterface method opens the user interface window and passes
+     * childrensMenu and classicMenu to UserInterface1 to display menu
      */
     public void openUserInterface() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-        
-            JFrame window = new JFrame("Literature Mad-Libs Game");
-            window.setContentPane(new UserInterface1(childrensMenu, classicsMenu));
-                //.setSize sets the frame size -- without it the frame would be tiny
-            window.setSize(1100, 600);
-            //window.pack();
-                //exits the program when the window is closed
-            window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            window.setResizable(true);
-            window.setLocation(150, 100);
-                //.setVisible allows frame to be visible
-            window.setVisible(true);
+
+                JFrame window = new JFrame("Literature Mad-Libs Game");
+                window.setContentPane(new UserInterface(childrensMenu, classicsMenu));
+                // .setSize sets the frame size -- without it the frame would be tiny
+                window.setSize(1100, 600);
+                // .setDefaultCloseOperation exits the program when the window is closed
+                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                window.setResizable(true);
+                window.setLocation(150, 100);
+                // .setVisible allows frame to be visible
+                window.setVisible(true);
             }
-            
+
         });
     }
        
