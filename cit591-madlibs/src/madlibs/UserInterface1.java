@@ -50,6 +50,8 @@ public class UserInterface1 extends JPanel implements ActionListener {
     private JButton playAgainButton;
     private int firstStart;
     
+    private JTextArea text3;
+    
     private Color DARK_RED;  
 
     /**
@@ -234,8 +236,11 @@ public class UserInterface1 extends JPanel implements ActionListener {
         wordCard.add(wordEntry, BorderLayout.CENTER);
     }
     
-	/* Get the indexes for all requested parts of speech and sample them and then
-	 * prompt user for correct number of replacements.
+	/**
+	 * requestWords method gets the indexes for all requested parts of speech, samples them and then
+	 * prompts user for the correct number of replacements.  This method is run for each part of 
+	 * speech.  
+	 * @param partOfSpeech
 	 */
     private void requestWords(PartOfSpeech partOfSpeech) {
 
@@ -275,6 +280,10 @@ public class UserInterface1 extends JPanel implements ActionListener {
         
     }
 
+    /**
+     * collectWords method collects the words inputed from the players and routes them back
+     * to the Passage class for continued processing.
+     */
     private void collectWords() {
         replacementWords = new String[numOfWords];
         for (int i = 0; i < numOfWords; i++) {
@@ -306,6 +315,13 @@ public class UserInterface1 extends JPanel implements ActionListener {
             
             eighthCard.add(new JScrollPane(text2), BorderLayout.CENTER);
             
+            // Places scrolling text area into the middle (CENTER) cell of the overall
+            // BorderLayout  (note the EAST cell is empty)
+            text3 = new JTextArea();
+            text3.setEditable(false);
+            text3.setMargin(new Insets(4, 4, 4, 4));
+            
+            eighthCard.add(new JScrollPane(text3), BorderLayout.EAST);
             
             // Places a "PLAY AGAIN button into the bottom cell of the overall
             // BorderLayout and
@@ -346,6 +362,21 @@ public class UserInterface1 extends JPanel implements ActionListener {
                 e.printStackTrace();
             }
         }
+        
+        // Displays Mad-Lib originalText in the text field with the replaced words highlighted
+        highlighter = text3.getHighlighter();
+           
+        text3.setText(originalText);       
+//        int[][] ReplacedIndexes = passage.getIndexesOfReplacements();
+//        for (int i = 0; i < ReplacedIndexes.length; i++) {
+//           
+//            try {             
+//                highlighter.addHighlight(ReplacedIndexes[i][0], ReplacedIndexes[i][1], DefaultHighlighter.DefaultPainter);
+//            } catch (BadLocationException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//        }
         
     }
 
