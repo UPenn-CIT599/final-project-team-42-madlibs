@@ -155,6 +155,8 @@ public class UserInterface extends JPanel implements ActionListener {
         text = new JTextArea();
         text.setEditable(false);
         text.setMargin(new Insets(4, 4, 4, 4));
+        text.setLineWrap(true);
+        text.setWrapStyleWord(true);
         firstCard.add(new JScrollPane(text), BorderLayout.CENTER);
 
         // Places a "PLAY MAD-LIBS button into the bottom cell of the overall
