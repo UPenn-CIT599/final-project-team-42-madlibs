@@ -53,6 +53,7 @@ public class UserInterface1 extends JPanel implements ActionListener {
     private JTextArea text3;
     
     private Color DARK_RED;  
+    private Color DARK_GREEN;
 
     /**
      * This constructor adds several GUI components to the panel and listens for
@@ -64,6 +65,7 @@ public class UserInterface1 extends JPanel implements ActionListener {
 
         setLayout(c1);
         DARK_RED = new Color(0xc0, 0x00, 0x00);
+        DARK_GREEN = new Color(0x00, 0x64, 0x00);
         add(cards, "MadLib");
         cards.add(firstCard, "Menu");
         cards.add(secondCard, "Replace Nouns");
@@ -161,11 +163,13 @@ public class UserInterface1 extends JPanel implements ActionListener {
         // button
         playButton = new JButton();
         playButton.setLayout(new BorderLayout());
-        playButton.setBackground(DARK_RED);
+        playButton.setBackground(DARK_GREEN);
         playButton.setOpaque(true);
-        //playButton.setBorderPainted(false);
+        playButton.setBorderPainted(false);
         JLabel label1 = new JLabel("PLAY MAD-LIBS");
         JLabel label2 = new JLabel("with selected passage");
+        label1.setFont(menuLabelFont.deriveFont(menuLabelFont.getStyle() ^ Font.BOLD));
+        label2.setFont(menuLabelFont.deriveFont(menuLabelFont.getStyle() ^ Font.BOLD));
         label1.setHorizontalAlignment(SwingConstants.CENTER);
         label2.setHorizontalAlignment(SwingConstants.CENTER);
         playButton.add(BorderLayout.NORTH, label1);
@@ -260,9 +264,10 @@ public class UserInterface1 extends JPanel implements ActionListener {
             }
             
             // Formats and positions a continue button at the bottom of the list
-            continueButton = new JButton("CONTINUE");  
-            continueButton.setBackground(DARK_RED);
+            continueButton = new JButton("CONTINUE");              
+            continueButton.setBackground(DARK_GREEN);
             continueButton.setOpaque(true);
+            continueButton.setBorderPainted(false);
             JPanel buttonArea = new JPanel();
             JPanel blankPanel = new JPanel();
             
@@ -331,8 +336,9 @@ public class UserInterface1 extends JPanel implements ActionListener {
             
             
             playAgainButton = new JButton("PLAY AGAIN");
-            playAgainButton.setBackground(DARK_RED);
+            playAgainButton.setBackground(DARK_GREEN);
             playAgainButton.setOpaque(true);
+            playAgainButton.setBorderPainted(false);
             JPanel buttonArea = new JPanel();
             JPanel blankPanel = new JPanel();
             eighthCard.add(buttonArea, BorderLayout.SOUTH);
