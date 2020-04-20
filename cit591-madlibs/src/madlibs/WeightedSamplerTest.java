@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 class WeightedSamplerTest {
 
 	@Test
-	void testSample() {
+	void testUnlimitedSample() {
 		Integer[][] indexesToSample = {
 			{0},
 			{1,2},
@@ -21,9 +21,23 @@ class WeightedSamplerTest {
 			{1,2},
 		};
 		WeightedSampler sampler = new WeightedSampler(indexesToSample);
-		
-		assertArrayEquals(expectedIndexes, sampler.sample(0.5, 20200418));
-		
+		assertArrayEquals(expectedIndexes, sampler.sample(0.5, 20200418, Integer.MAX_VALUE));
+	}
+	@Test
+	void testLimitedSample() {
+		Integer[][] indexesToSample = {
+			{0},
+			{1,2},
+			{3,4,5},
+			{6,7},
+			{8},
+		};
+		Integer[][] expectedIndexes = {
+			{3, 4, 5},
+			{8}
+		};
+		WeightedSampler sampler = new WeightedSampler(indexesToSample);
+		assertArrayEquals(expectedIndexes, sampler.sample(0.5, 20200418, 2));
 	}
 	@Test
 	void testEmptySample() {
@@ -31,7 +45,7 @@ class WeightedSamplerTest {
 		Integer[][] expectedIndexes = new Integer[0][];
 		WeightedSampler sampler = new WeightedSampler(indexesToSample);
 		
-		assertArrayEquals(expectedIndexes, sampler.sample(0.5, 20200418));
+		assertArrayEquals(expectedIndexes, sampler.sample(0.5, 20200418, Integer.MAX_VALUE));
 		
 	}
 

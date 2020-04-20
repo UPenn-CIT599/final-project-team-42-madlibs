@@ -236,8 +236,9 @@ public class UserInterface extends JPanel implements ActionListener {
         // This area will include text boxes to enter words of various parts of speech
 
         // Sets the nested wordEntry GridLayout and places it in the CENTER cell of the
-        // BorderLayout
-        wordEntry.setLayout(new GridLayout(10, 1, 3, 10));
+        // BorderLayout. Adding 2 to the number of rows in layout, since we need space
+        // for the button and the prompt
+        wordEntry.setLayout(new GridLayout(MadLib.MAX_WORDS_PER_PART_OF_SPEECH + 2, 1, 3, 10));
         wordEntry.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         wordCard.add(wordEntry, BorderLayout.CENTER);
     }
@@ -252,7 +253,7 @@ public class UserInterface extends JPanel implements ActionListener {
 
         Integer[][] indexesToSample = passage.getPartOfSpeech(partOfSpeech).toNestedArray();
         WeightedSampler sampler = new WeightedSampler(indexesToSample);
-        indexesToReplace = sampler.sample(partOfSpeech.getDesiredPercent());
+        indexesToReplace = sampler.sample(partOfSpeech.getDesiredPercent(), MadLib.MAX_WORDS_PER_PART_OF_SPEECH);
         
         numOfWords = indexesToReplace.length;
         if (indexesToReplace.length > 0) {

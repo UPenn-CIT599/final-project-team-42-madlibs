@@ -33,18 +33,22 @@ public class WeightedSampler {
 	 * to the total number of elements that it contains. A seed is required.
 	 * @param desiredPercent The percentage of the total elements that should be contained
 	 * within the chosen Integer arrays. The actual percentage will always be equal to or
-	 * greater than this amount.
+	 * greater than this amount, unless maxN is reached.
 	 * @param seed A random seed for reproducibility purposes
+	 * @param maxN The maximum number of 1d Integer arrays that should be selected.
+	 * Providing a low value could result in the weight of the selected 1d arrays
+	 * being lower than the value specified in the desiredPercent parameter
 	 * @return A 2d Integer array containing the randomly selected 1d Integer arrays
 	 */
-	public Integer[][] sample(double desiredPercent, long seed) {
+	public Integer[][] sample(double desiredPercent, long seed, Integer maxN) {
 		Random random = new Random(seed);
 		// Make copy so can modify without mutating original
 		ArrayList<Integer[]> indexesToSample = (ArrayList<Integer[]>) this.indexesToSample.clone();
 		ArrayList<Integer[]> sampledIndexes = sample(
 			indexesToSample,
 			desiredPercent,
-			random
+			random,
+			maxN
 		);
 		
 		return sampledIndexes.toArray(new Integer[sampledIndexes.size()][]);
@@ -52,20 +56,25 @@ public class WeightedSampler {
 	/**
 	 * Samples 1d Integer arrays from the supplied 2d Integer array. The percentage of 
 	 * of elements contained within the chosen Integer arrays will be equal to or greater
-	 * than the requested percentage. The change of a 1d Integer array being selected is proprotional
+	 * than the requested percentage. The chance of a 1d Integer array being selected is proportional
 	 * to the total number of elements that it contains
 	 * @param desiredPercent The percentage of the total elements that should be contained
 	 * within the chosen Integer arrays. The actual percentage will always be equal to or
-	 * greater than this amount.
+	 * greater than this amount, unless maxN is reached.
+	 * @param maxN The maximum number of 1d Integer arrays that should be selected.
+	 * Providing a low value could result in the weight of the selected 1d arrays
+	 * being lower than the value specified in the desiredPercent parameter
 	 * @return A 2d Integer array containing the randomly selected 1d Integer arrays
 	 */
-	public Integer[][] sample(double desiredPercent) {;
-		return sample(desiredPercent, new Random().nextLong());
+	public Integer[][] sample(double desiredPercent, Integer maxN) {;
+		return sample(desiredPercent, new Random().nextLong(), maxN);
 	}
+	
 	private ArrayList<Integer[]> sample(
 		ArrayList<Integer[]> indexesToSample,
 		double desiredPercent,
-		Random random) {
+		Random random,
+		Integer maxN) {
 		
 		// Will populate
 		ArrayList<Integer[]> sampledIndexes = new ArrayList<Integer[]>();
@@ -97,17 +106,21 @@ public class WeightedSampler {
 		}
 		// Removed the sampled set of indexes so they don't get chosen again
 		indexesToSample.remove(i);
-		// Update how much percentage needs to be sampled
+		// Update how much percentage needs to be sampled and how close to maxN we are
 		desiredPercent -= currentWeight;
+		maxN -= 1;
+		
 		
 		sampledIndexes.add(currentIndexes);
-		// Call recursively until we have met our desired percentage
-		if (desiredPercent > 0) {
+		// Call recursively until we have met our desired percentage unless we have
+		// reached the maximum number of elements 
+		if (desiredPercent > 0 && maxN > 0) {
 			sampledIndexes.addAll(
 				sample(
 					indexesToSample,
 					desiredPercent,
-					random
+					random,
+					maxN
 				)
 			);
 		}

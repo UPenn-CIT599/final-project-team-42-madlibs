@@ -9,7 +9,9 @@ class PartOfSpeechTest {
 	// Simple test, since screwed up when developing
 	@Test
 	void compareMaxMinTest() {
-		assert(PartOfSpeech.SINGULAR_NOUN.getDesiredPercent() > 0);
+		for (PartOfSpeech pos: PartOfSpeech.values()) {
+			assert(pos.getDesiredPercent() > 0);
+		}
 	}
 
 }

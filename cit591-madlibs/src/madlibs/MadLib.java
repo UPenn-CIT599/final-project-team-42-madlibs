@@ -19,8 +19,9 @@ import javax.swing.SwingUtilities;
 public class MadLib {
     private ArrayList<MenuEntry> classicsMenu;
     private ArrayList<MenuEntry> childrensMenu; 
-    private int menuSize;
-    private Passage passage;
+    /* This global constant is used to determine the maximum number of words
+     * that the user will be prompted for each part of speech*/
+    public static final int MAX_WORDS_PER_PART_OF_SPEECH = 5;
    
 
     
@@ -76,8 +77,6 @@ public class MadLib {
                     classicsMenu.add(entry);
                 }            
             }
-            //menuSize is used in both makeMenu and madLibRunner methods
-            menuSize = childrensMenu.size() + classicsMenu.size();
             in.close();
             
         } catch (FileNotFoundException e) {
