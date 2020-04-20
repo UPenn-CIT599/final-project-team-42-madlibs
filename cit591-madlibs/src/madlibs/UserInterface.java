@@ -300,13 +300,22 @@ public class UserInterface extends JPanel implements ActionListener {
      * collectWords method collects the words inputed from the players and routes them back
      * to the Passage class for continued processing.
      */
-    private void collectWords() {
+    private boolean collectWords() {
         replacementWords = new String[numOfWords];
+        boolean allWordsEntered = true;
         for (int i = 0; i < numOfWords; i++) {
+            if (wordField[i].getText().equals("")) { 
+                allWordsEntered = false;
+            }
+            else {    
             replacementWords[i] = wordField[i].getText();
-            //System.out.println(replacementWords[i]);
+            }
         }
+        if (allWordsEntered == true) {
         passage.replaceWords(replacementWords, indexesToReplace);
+        }
+        
+        return allWordsEntered;
     }
 
     /**
@@ -430,6 +439,7 @@ public class UserInterface extends JPanel implements ActionListener {
      */
     public void actionPerformed(ActionEvent evt) {
         MadLib m = new MadLib();
+        JFrame errorPopUp = null;
         try {
             JRadioButton passageSelected;
             Object target = evt.getSource();
@@ -447,12 +457,18 @@ public class UserInterface extends JPanel implements ActionListener {
                     }
                 }
                 if (target == continueButton) {
-                    collectWords();
-                    if (cardCounter < 6) {
-                        designWordRequestCards();
-                    } else {
-                        cardCounter = 0;
-                        designResultCard();
+                    boolean allWordsEntered = collectWords();
+                    if (allWordsEntered == true) {
+                        if (cardCounter < 6) {
+                            designWordRequestCards();
+                        } else {
+                            cardCounter = 0;
+                            designResultCard();
+                        }
+                    }
+                    else if (allWordsEntered == false) {
+                        errorPopUp = new JFrame();
+                        JOptionPane.showMessageDialog(errorPopUp, "To continue Literature Mad-Libs please enter a word in every field!");
                     }
                         
                 }
