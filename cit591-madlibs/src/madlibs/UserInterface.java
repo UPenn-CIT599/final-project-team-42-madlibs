@@ -30,6 +30,7 @@ public class UserInterface extends JPanel implements ActionListener {
     private JPanel seventhCard = new JPanel();
     private JPanel eighthCard = new JPanel();
     private JPanel wordEntry = new JPanel();
+    private JPanel blankSpace = new JPanel();
     private ArrayList<MenuEntry> childrensMenu;
     private ArrayList<MenuEntry> classicsMenu;
     private Boolean RadioButtonSelected = null;
@@ -54,7 +55,8 @@ public class UserInterface extends JPanel implements ActionListener {
     
     private Color DARK_RED;  
     private Color LT_GREEN;
-
+    private Font menuFont;
+    
     /**
      * This constructor adds several GUI components to the panel and listens for
      * action events from some of them.
@@ -66,6 +68,7 @@ public class UserInterface extends JPanel implements ActionListener {
         setLayout(c1);
         DARK_RED = new Color(0xc0, 0x00, 0x00);
         LT_GREEN = new Color(0x2f, 0xb6, 0x2f);
+        menuFont = new Font("Lucinda Grande", Font.BOLD, 18);
         add(cards, "MadLib");
         cards.add(firstCard, "Menu");
         cards.add(secondCard, "Replace Nouns");
@@ -121,8 +124,9 @@ public class UserInterface extends JPanel implements ActionListener {
         // Displays the Children's Literature menu options
         JLabel childrenLabel = new JLabel("Children's Literature:");        
         Font menuLabelFont = childrenLabel.getFont();
-        childrenLabel.setFont(menuLabelFont.deriveFont(menuLabelFont.getStyle() ^ Font.BOLD)); 
-        childrenLabel.setFont(menuLabelFont.deriveFont(menuLabelFont.getStyle() ^ Font.BOLD)); 
+        System.out.println(menuLabelFont + " " + childrenLabel.getSize());
+        childrenLabel.setFont(menuFont); 
+        //childrenLabel.setFont(menuLabelFont.deriveFont(menuLabelFont.getStyle() ^ Font.BOLD)); 
         litMenu.add(childrenLabel);
         for (int i = 1; i <= childrensMenu.size(); i++) {
             radioButton[i] = new JRadioButton(
@@ -134,7 +138,7 @@ public class UserInterface extends JPanel implements ActionListener {
 
         // Displays the Classic Literature menu options
         JLabel classicLabel = new JLabel("Classic Literature:");
-        classicLabel.setFont(menuLabelFont.deriveFont(menuLabelFont.getStyle() ^ Font.BOLD));
+        classicLabel.setFont(menuFont);
         litMenu.add(classicLabel);
         for (int j = childrensMenu.size() + 1; j <= (childrensMenu.size() + classicsMenu.size()); j++) {
             radioButton[j] = new JRadioButton(classicsMenu.get(j - childrensMenu.size() - 1).getLitTitle() + " by"
@@ -230,6 +234,7 @@ public class UserInterface extends JPanel implements ActionListener {
         // Sets BorderLayout as layout for secondCard and inserts title in the top
         // (NORTH) cell
         wordCard.setLayout(new BorderLayout());
+        
         formatTitle(wordCard, "On Our Way to Literature Mad-Lib Fun!");
 
         // Nests GridLayouts into the middle (CENTER) cell of the overall BorderLayout
@@ -238,9 +243,12 @@ public class UserInterface extends JPanel implements ActionListener {
         // Sets the nested wordEntry GridLayout and places it in the CENTER cell of the
         // BorderLayout. Adding 2 to the number of rows in layout, since we need space
         // for the button and the prompt
-        wordEntry.setLayout(new GridLayout(MadLib.MAX_WORDS_PER_PART_OF_SPEECH + 2, 1, 3, 10));
+        wordEntry.setLayout(new GridLayout(MadLib.MAX_WORDS_PER_PART_OF_SPEECH + 5, 1, 3, 10));
         wordEntry.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        wordCard.add(wordEntry, BorderLayout.CENTER);
+        wordCard.add(wordEntry, BorderLayout.WEST);
+        
+        // Adds blank JPanel in order to match the gray coloring of the JTextField background in the neighboring column
+        wordCard.add(blankSpace, BorderLayout.CENTER);
     }
     
 	/**
@@ -262,7 +270,7 @@ public class UserInterface extends JPanel implements ActionListener {
 
             wordField = new JTextField[indexesToReplace.length];
             for (int i = 0; i < indexesToReplace.length; i++) {
-                wordField[i] = new JTextField(10);
+                wordField[i] = new JTextField(10);                
                 wordEntry.add(wordField[i]);
             }
             
@@ -306,7 +314,7 @@ public class UserInterface extends JPanel implements ActionListener {
      * with designated words replaced with the words inputed by the player on secondCard thru
      * seventhCard
      */
-    private void designResultCard() {
+    private void designResultCard()  {
         c1.show(cards, "Result");
         
         while (firstStart == 0) {
@@ -366,12 +374,13 @@ public class UserInterface extends JPanel implements ActionListener {
         // Displays Mad-Lib updatedText in the text field with the replaced words highlighted
         Highlighter highlighter = text2.getHighlighter();
         String updatedText = passage.getUpdatedText();        
-        text2.setText(updatedText);       
+        text2.setText("Updated Passage:  \n\n" +updatedText);       
         int[][] ReplacedIndexes = passage.getIndexesOfReplacements();
+        int titleBuffer = 20;
+        DefaultHighlighter.DefaultHighlightPainter greyPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
         for (int i = 0; i < ReplacedIndexes.length; i++) {
-           
-            try {             
-                highlighter.addHighlight(ReplacedIndexes[i][0], ReplacedIndexes[i][1], DefaultHighlighter.DefaultPainter);
+              try {  
+                highlighter.addHighlight(titleBuffer + ReplacedIndexes[i][0], titleBuffer + ReplacedIndexes[i][1], greyPainter);
             } catch (BadLocationException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -381,7 +390,7 @@ public class UserInterface extends JPanel implements ActionListener {
         // Displays Mad-Lib originalText in the text field with the replaced words highlighted
         highlighter = text3.getHighlighter();
            
-        text3.setText(originalText);       
+        text3.setText("Original Passage: \n\n" +  originalText);       
 //        int[][] ReplacedIndexes = passage.getIndexesOfReplacements();
 //        for (int i = 0; i < ReplacedIndexes.length; i++) {
 //           
