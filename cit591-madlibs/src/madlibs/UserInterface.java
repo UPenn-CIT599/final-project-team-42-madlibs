@@ -34,6 +34,10 @@ public class UserInterface extends JPanel implements ActionListener {
     private ArrayList<MenuEntry> childrensMenu;
     private ArrayList<MenuEntry> classicsMenu;
     private Boolean RadioButtonSelected = null;
+    private JRadioButton [] radioButton;
+    private int createYourOwnMenuIndex;
+    private String createYourOwnName;
+    private Boolean createYourOwn;
     private JButton playButton;
 
     private JButton continueButton;
@@ -109,7 +113,7 @@ public class UserInterface extends JPanel implements ActionListener {
         // are available
         // plus three to compensate for the instructions and "Children's Literature" &
         // "Classic Literature" labels
-        int numMenuRows = (childrensMenu.size() + classicsMenu.size() + 3);
+        int numMenuRows = (childrensMenu.size() + classicsMenu.size() + 5);
         litMenu.setLayout(new GridLayout(numMenuRows, 1, 3, 1));
         litMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         firstCard.add(litMenu, BorderLayout.WEST);
@@ -118,13 +122,12 @@ public class UserInterface extends JPanel implements ActionListener {
         // each menu option
         JLabel instructions = new JLabel("Please select a literature passage you would like to Mad-Lib: ");
         litMenu.add(instructions);
-        JRadioButton[] radioButton = new JRadioButton[(childrensMenu.size() + classicsMenu.size() + 1)];
+        JRadioButton[] radioButton = new JRadioButton[(childrensMenu.size() + classicsMenu.size() + 2)];
         ButtonGroup group = new ButtonGroup();
 
         // Displays the Children's Literature menu options
         JLabel childrenLabel = new JLabel("Children's Literature:");        
         Font menuLabelFont = childrenLabel.getFont();
-        System.out.println(menuLabelFont + " " + childrenLabel.getSize());
         childrenLabel.setFont(menuFont); 
         //childrenLabel.setFont(menuLabelFont.deriveFont(menuLabelFont.getStyle() ^ Font.BOLD)); 
         litMenu.add(childrenLabel);
@@ -148,8 +151,19 @@ public class UserInterface extends JPanel implements ActionListener {
             radioButton[j].setName(classicsMenu.get(j - childrensMenu.size() - 1).getLitFileName());
         }
 
+        // Adds an option to "Create your own Mad-Lib" 
+        createYourOwnName = "Create Your Own Literature Mad-Lib Passage";
+        JLabel createYourOwnLabel = new JLabel(createYourOwnName);
+        createYourOwnLabel.setFont(menuFont);
+        litMenu.add(createYourOwnLabel);
+        createYourOwnMenuIndex = classicsMenu.size() + childrensMenu.size() + 1;
+        radioButton[createYourOwnMenuIndex] = new JRadioButton("Enter your own original text in the text field");
+        litMenu.add(radioButton[createYourOwnMenuIndex]);
+        group.add(radioButton[createYourOwnMenuIndex]);
+        radioButton[createYourOwnMenuIndex].setName(createYourOwnName);
+        
         // Adds action Listener to radioButtons
-        for (int k = 1; k <= (childrensMenu.size() + classicsMenu.size()); k++) {
+        for (int k = 1; k <= (childrensMenu.size() + classicsMenu.size()) +1; k++) {
             radioButton[k].addActionListener(this);
 
         }
@@ -218,9 +232,10 @@ public class UserInterface extends JPanel implements ActionListener {
             c1.show(cards, "Replace -ing Verbs");
             setWordRequestCardLayout(seventhCard);
         }
-
+        
         PartOfSpeech[] pos = PartOfSpeech.values();
         requestWords(pos[cardCounter]);
+        
         cardCounter++;
 
     }
@@ -290,8 +305,15 @@ public class UserInterface extends JPanel implements ActionListener {
             
         }
         else {
-            cardCounter++;
-            designWordRequestCards();
+            if (cardCounter < 5) {
+                cardCounter++;
+                designWordRequestCards();
+            }
+            // Exception control of potential fatal error in the case of no "verbs ending in ed" in originalText
+            else { 
+                cardCounter = 0;
+                designResultCard();
+            }
         }
         
     }
@@ -323,44 +345,42 @@ public class UserInterface extends JPanel implements ActionListener {
      * with designated words replaced with the words inputed by the player on secondCard thru
      * seventhCard
      */
-    private void designResultCard()  {
+    private void designResultCard() {
         c1.show(cards, "Result");
-        
+
         while (firstStart == 0) {
             // Sets BorderLayout as layout for firstCard and inserts title in the top
             // (NORTH) cell
             eighthCard.setLayout(new BorderLayout());
             formatTitle(eighthCard, "Literature Mad-Lib Result");
-            
+
             JPanel resultPanel = new JPanel();
-            resultPanel.setLayout(new GridLayout(0,2));
+            resultPanel.setLayout(new GridLayout(0, 2));
             // Places scrolling text area into the middle (CENTER) cell of the overall
-            // BorderLayout  (note the EAST cell is empty)
-            text2 = new JTextArea();            
+            // BorderLayout (note the EAST cell is empty)
+            text2 = new JTextArea();
             text2.setEditable(false);
             text2.setMargin(new Insets(4, 4, 4, 4));
-            
-            
-            
+            text2.setLineWrap(true);
+            text2.setWrapStyleWord(true);
+
             // Places scrolling text area into the middle (CENTER) cell of the overall
-            // BorderLayout  (note the EAST cell is empty)
+            // BorderLayout (note the EAST cell is empty)
             text3 = new JTextArea();
             text3.setEditable(false);
             text3.setMargin(new Insets(4, 4, 4, 4));
-            
-            
+            text3.setLineWrap(true);
+            text3.setWrapStyleWord(true);
+
             resultPanel.add(text2);
             resultPanel.add(text3);
             eighthCard.add(new JScrollPane(resultPanel), BorderLayout.CENTER);
-            
-            
+
             // Places a "PLAY AGAIN button into the bottom cell of the overall
             // BorderLayout and
             // nests another BorderLayout within the button in order to display a 2-line
             // button
-            
-            
-            
+
             playAgainButton = new JButton("PLAY AGAIN");
             playAgainButton.setBackground(LT_GREEN);
             playAgainButton.setOpaque(true);
@@ -368,55 +388,58 @@ public class UserInterface extends JPanel implements ActionListener {
             JPanel buttonArea = new JPanel();
             JPanel blankPanel = new JPanel();
             eighthCard.add(buttonArea, BorderLayout.SOUTH);
-            
-            buttonArea.setLayout(new GridLayout(0, 3));           
+
+            buttonArea.setLayout(new GridLayout(0, 3));
             buttonArea.add(blankPanel);
             buttonArea.add(playAgainButton);
-            
+
             // Adds action listener to the playButton
             playAgainButton.addActionListener(this);
-            
-        
+
             firstStart++;
         }
-        
-        // Displays Mad-Lib updatedText in the text field with the replaced words highlighted
-        highlightText(
-        	"Updated Passage:  \n\n",
-        	passage.getUpdatedText(),
-        	text2,
-        	passage.getIndexesOfReplacedWords()
-        );
-        
-        // Displays Mad-Lib originalText in the text field with the replaced words highlighted
-        highlightText(
-        	"Original Passage: \n\n",
-        	passage.getOriginalText(),
-        	text3,
-        	passage.getIndexesOfOriginalWords()
-        );
+
+        // Displays Mad-Lib updatedText in the text field with the replaced words
+        // highlighted
+        highlightText("Updated Passage:  \n\n", passage.getUpdatedText(), text2, passage.getIndexesOfReplacedWords());
+
+        // Displays Mad-Lib originalText in the text field with the replaced words
+        // highlighted
+        highlightText("Original Passage: \n\n", passage.getOriginalText(), text3, passage.getIndexesOfOriginalWords());
     }
-    
-    private void highlightText(
-    		String title,
-    		String text,
-    		JTextArea textArea,
-    		int[][] indexes) {
-    	
-    	Highlighter highlighter = textArea.getHighlighter();
-        textArea.setText(title + text);       
-        DefaultHighlighter.DefaultHighlightPainter greyPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
+
+    /**
+     * highlightText private method highlights portions of a text indicated by the
+     * indexes provided in the indexes 2D array
+     * 
+     * @param title
+     * @param text
+     * @param textArea
+     * @param indexes  - array including the start and stop indexes of each desired
+     *                 highlight
+     */
+    private void highlightText(String title, String text, JTextArea textArea, int[][] indexes) {
+
+        Highlighter highlighter = textArea.getHighlighter();
+        textArea.setText(title + text);
+        DefaultHighlighter.DefaultHighlightPainter greyPainter = new DefaultHighlighter.DefaultHighlightPainter(
+                Color.LIGHT_GRAY);
         for (int i = 0; i < indexes.length; i++) {
-              try {  
+            try {
                 highlighter.addHighlight(title.length() + indexes[i][0], title.length() + indexes[i][1], greyPainter);
             } catch (BadLocationException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-    	
-    }
 
+    }
+    
+    /**
+     * formatTitle method formats the title of each window (card)
+     * @param card
+     * @param titleString
+     */
     private void formatTitle(JPanel card, String titleString) {
         
                     
@@ -428,13 +451,10 @@ public class UserInterface extends JPanel implements ActionListener {
         
         title.setForeground(DARK_RED);        
         title.setHorizontalAlignment(SwingConstants.CENTER);
-        title.setPreferredSize(new Dimension(STANDARD_WIDTH, 50));
+        //title.setPreferredSize(new Dimension(STANDARD_WIDTH, 50));
         card.add(title, BorderLayout.NORTH);
     }
 
-    private void post(String message) { // add a message and line feed to the text
-        text.append(message + "\n\n");
-    }
 
     /**
      * Respond to an ActionEvent from one of the GUI components in the panel. In
@@ -444,6 +464,7 @@ public class UserInterface extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent evt) {
         MadLib m = new MadLib();
         JFrame errorPopUp = null;
+        
         try {
             JRadioButton passageSelected;
             Object target = evt.getSource();
@@ -452,7 +473,9 @@ public class UserInterface extends JPanel implements ActionListener {
             if (target instanceof JButton) {
                 if (target == playButton) {
                     if (RadioButtonSelected == true) {
-
+                        if (createYourOwn == true);{
+                            originalText = text.getText();
+                        }
                         passage = new Passage(originalText);
                         designWordRequestCards();
 
@@ -486,11 +509,20 @@ public class UserInterface extends JPanel implements ActionListener {
             else if (target instanceof JRadioButton) {
                 if (((JRadioButton) target).isSelected()) {
                     passageSelected = (JRadioButton) target;
-
-                    originalText = m.litReader(passageSelected.getName());
-                    text.setText(originalText);
+                    if (passageSelected.getName() != createYourOwnName ) {                        
+                        text.setEditable(false);
+                        originalText = m.litReader(passageSelected.getName());
+                        text.setText(originalText);
+                        createYourOwn = false;
+                        
+                    }
+                    else {
+                        text.setText("Type your own Mad-Lib passage here.");
+                        text.setEditable(true);
+                        //originalText = text.getText();
+                        createYourOwn = true;
+                    }
                     RadioButtonSelected = true;
-
                 }
 
             }
