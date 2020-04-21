@@ -381,36 +381,40 @@ public class UserInterface extends JPanel implements ActionListener {
         }
         
         // Displays Mad-Lib updatedText in the text field with the replaced words highlighted
-        Highlighter highlighter = text2.getHighlighter();
-        String updatedText = passage.getUpdatedText();        
-        text2.setText("Updated Passage:  \n\n" +updatedText);       
-        int[][] ReplacedIndexes = passage.getIndexesOfReplacements();
-        int titleBuffer = 20;
+        highlightText(
+        	"Updated Passage:  \n\n",
+        	passage.getUpdatedText(),
+        	text2,
+        	passage.getIndexesOfReplacedWords()
+        );
+        
+        // Displays Mad-Lib originalText in the text field with the replaced words highlighted
+        highlightText(
+        	"Original Passage: \n\n",
+        	passage.getOriginalText(),
+        	text3,
+        	passage.getIndexesOfOriginalWords()
+        );
+    }
+    
+    private void highlightText(
+    		String title,
+    		String text,
+    		JTextArea textArea,
+    		int[][] indexes) {
+    	
+    	Highlighter highlighter = textArea.getHighlighter();
+        textArea.setText(title + text);       
         DefaultHighlighter.DefaultHighlightPainter greyPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
-        for (int i = 0; i < ReplacedIndexes.length; i++) {
+        for (int i = 0; i < indexes.length; i++) {
               try {  
-                highlighter.addHighlight(titleBuffer + ReplacedIndexes[i][0], titleBuffer + ReplacedIndexes[i][1], greyPainter);
+                highlighter.addHighlight(title.length() + indexes[i][0], title.length() + indexes[i][1], greyPainter);
             } catch (BadLocationException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-        
-        // Displays Mad-Lib originalText in the text field with the replaced words highlighted
-        highlighter = text3.getHighlighter();
-           
-        text3.setText("Original Passage: \n\n" +  originalText);       
-//        int[][] ReplacedIndexes = passage.getIndexesOfReplacements();
-//        for (int i = 0; i < ReplacedIndexes.length; i++) {
-//           
-//            try {             
-//                highlighter.addHighlight(ReplacedIndexes[i][0], ReplacedIndexes[i][1], DefaultHighlighter.DefaultPainter);
-//            } catch (BadLocationException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        }
-        
+    	
     }
 
     private void formatTitle(JPanel card, String titleString) {

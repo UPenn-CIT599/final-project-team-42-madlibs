@@ -19,19 +19,33 @@ class PassageTest {
 			"close by her.";
 
 	@Test
-	void indexesOfReplacementsTest() {
+	void indexesOfReplacedWordsTest() {
 		Passage shortPassage = new Passage(shortText);
 		shortPassage.replaceWords(
 			new String[] {"Alice Cooper", "Smart Car", "angriest"},
 			new Integer[][] {{2}, {5}, {17}}
 		);
 		int[][] expectedIndexes = new int[][] {{6, 18}, {24, 33}, {94, 102}}; 
-		assertArrayEquals(expectedIndexes, shortPassage.getIndexesOfReplacements());
+		assertArrayEquals(expectedIndexes, shortPassage.getIndexesOfReplacedWords());
+	}
+	@Test
+	void indexesOfOriginalWordsTest() {
+		Passage shortPassage = new Passage(shortText);
+		shortPassage.replaceWords(
+			new String[] {"Alice Cooper", "Smart Car", "angriest"},
+			new Integer[][] {{2}, {5}, {17}}
+		);
+		int[][] expectedIndexes = new int[][] {{6, 14}, {20, 25}, {86, 94}}; 
+		assertArrayEquals(expectedIndexes, shortPassage.getIndexesOfOriginalWords());
 	}
 	@Test
 	void getOriginalTextShortTest() {
 		Passage shortPassage = new Passage(shortText);
-		assertEquals(shortText, shortPassage.getUpdatedText());
+		shortPassage.replaceWords(
+			new String[] {"help", "Alice Cooper", "Smart Car", "angriest"},
+			new Integer[][] {{0}, {2}, {5}, {17}}
+		);
+		assertEquals(shortText, shortPassage.getOriginalText());
 	}
 	
 	@Test
@@ -56,11 +70,15 @@ class PassageTest {
 				"trying to make you something else is the angriest accomplishment.";
 		assertEquals(expectedText, shortPassage.getUpdatedText());
 	}
-	// Currently failing, due to not reproducing line breaks. Also parentheses?
+	
 	@Test
-	void getUpdatedTextLongTest() {
+	void getOriginalTextLongTest() {
 		Passage longPassage = new Passage(longText);
-		assertEquals(longText, longPassage.getUpdatedText());
+		longPassage.replaceWords(
+			new String[] {"Alice Cooper", "Smart Car", "angriest"},
+			new Integer[][] {{2}, {5}, {17}}
+		);
+		assertEquals(longText, longPassage.getOriginalText());
 	}
 	// Tests on shorter passage
 	@Test

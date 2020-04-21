@@ -15,7 +15,7 @@ public class Passage {
 	
 	// For storing the words as individual strings
 	private ArrayList<Word> originalWords;
-	private ArrayList<Word> updatedWords;
+	private ArrayList<Word> modifiedWords;
 	
 	// For tracking all parts of speech. Helps when reconstructing text and
 	// need to flag punctuation
@@ -31,8 +31,6 @@ public class Passage {
 	private PartOfSpeechTracker adjectives;
 	private PartOfSpeechTracker ingVerbs;
 	private PartOfSpeechTracker edVerbs;
-	
-	private String originalText;
 	
 	/**
 	 * For storing important information about a word, such as the actual word,
@@ -160,10 +158,12 @@ public class Passage {
 	Passage (String originalText) {
 		
 	
-		this.originalText = originalText;
 		originalWords = new ArrayList<Word>();
+		modifiedWords = new ArrayList<Word>();
 		
-		singularNouns = new PartOfSpeechTracker();		pluralNouns = new PartOfSpeechTracker();
+		
+		singularNouns = new PartOfSpeechTracker();
+		pluralNouns = new PartOfSpeechTracker();
 		adverbs = new PartOfSpeechTracker();
 		adjectives = new PartOfSpeechTracker();
 		edVerbs = new PartOfSpeechTracker();
@@ -177,7 +177,11 @@ public class Passage {
 				String word = sentence.originalText(i);
 				String posTag = sentence.posTag(i);
 				String trailingBlanks = sentence.after(i);
+				// Adding a separate word object to both original and updated word
+				// lists so can modify a Word object in one list without affecting
+				// the other
 				originalWords.add(new Word(word, posTag, trailingBlanks, i));
+				modifiedWords.add(new Word(word, posTag, trailingBlanks, i));
 				// Get the different parts of speech, adding to appropriate object
 				if (posTag.equals("NN") || posTag.equals("NNP")) {
 					singularNouns.add(word, passageIndex);
@@ -200,7 +204,6 @@ public class Passage {
 				passageIndex++;
 			};
 		}
-		updatedWords = (ArrayList<Word>) originalWords.clone();
 	}
 	
 	/**
@@ -208,35 +211,37 @@ public class Passage {
 	 * @return The original, unmodified, text.
 	 */
 	public String getOriginalText() {
-		return originalText;
+		return reconstructText(originalWords);
+	}
+	
+	// Strings together the string representations Word objects into a cohesive
+	// string
+	private String reconstructText(ArrayList<Word> deconstructedText) {
+		StringBuilder updatedText = new StringBuilder();
+		for (Word word : deconstructedText) {
+			updatedText.append(word.toString());
+		}
+		return updatedText.toString();
 	}
 	
 	/**
 	 * @return The modified text that contains user supplied words
 	 */
 	public String getUpdatedText() {
-		/* Initialize with first word, since when adding additional words
-		* we will prepend a space so that words are spaced properly
-		*/
-		StringBuilder updatedText = new StringBuilder();
-		for (Word word : updatedWords) {
-			updatedText.append(word.toString());
-		}
-		return updatedText.toString().trim();
+		return reconstructText(modifiedWords);
 	}
 	
 	/**
-	 * 
-	 * @return Gets the indexes of within the modified text of the words that
-	 * have been replaced. This is a 2-dimensional integer array, n x 2, where
-	 * n is the the number of words that have been replaced. The first element
-	 * of every row gives the place where the word starts in the passage, and
-	 * the second element give the place where the word ends.
+	 * @return Gets the indexes of within the supplied ArrayList of Words of the
+	 * words that have been replaced. This is a 2-dimensional integer array,
+	 * n x 2, where n is the the number of words that have been replaced. The
+	 * first element of every row gives the place where the word starts in the
+	 * passage, and the second element give the place where the word ends.
 	 */
-	public int[][] getIndexesOfReplacements() {
+	private int[][] getIndexesOfReplacements(ArrayList<Word> individualWords) {
 		Integer index = 0;
 		ArrayList<Integer[]> indexesList = new ArrayList<Integer[]>();
-		for (Word word : updatedWords) {
+		for (Word word : individualWords) {
 			if (word.isReplaced()) {
 				indexesList.add(new Integer[] {index, index + word.getText().length() });
 			}
@@ -253,6 +258,27 @@ public class Passage {
 	}
 	
 	/**
+	 * @return Gets the indexes of within the modified text of the words that
+	 * have been replaced. This is a 2-dimensional integer array, n x 2, where
+	 * n is the the number of words that have been replaced. The first element
+	 * of every row gives the place where the word starts in the passage, and
+	 * the second element give the place where the word ends.
+	 */
+	public int[][] getIndexesOfReplacedWords() {
+		return getIndexesOfReplacements(modifiedWords);
+	}
+	
+	/**
+	 * @return Gets the indexes of within the original text of the words that
+	 * have been replaced. This is a 2-dimensional integer array, n x 2, where
+	 * n is the the number of words that have been replaced. The first element
+	 * of every row gives the place where the word starts in the passage, and
+	 * the second element give the place where the word ends.
+	 */
+	public int[][] getIndexesOfOriginalWords() {
+		return getIndexesOfReplacements(originalWords);
+	}
+	/**
 	 * Updates the words at the specified indexes with the supplied words.
 	 * @param replacementWords The new words that will overwrite the original words
 	 * @param indexes The indexes of the original words that should be replaced.
@@ -262,9 +288,12 @@ public class Passage {
 	public void replaceWords(String[] replacementWords, Integer[][] indexes) {
 		for (int i = 0; i < indexes.length; i++) {
 			for (int j = 0; j < indexes[i].length; j++) {
-				Word wordToUpdate = updatedWords.get(indexes[i][j]);
+				Word wordToUpdate = modifiedWords.get(indexes[i][j]);
 				wordToUpdate.setText(replacementWords[i]);
 				wordToUpdate.setReplaced(true);
+				// Also mark in original text if word has been replaced, so can
+				// get indexes for highlighting
+				originalWords.get(indexes[i][j]).setReplaced(true);
 			}
 		}
 	}
