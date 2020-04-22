@@ -408,9 +408,9 @@ public class UserInterface extends JPanel implements ActionListener {
      * highlightText private method highlights portions of a text indicated by the
      * indexes provided in the indexes 2D array
      * 
-     * @param title
-     * @param text
-     * @param textArea
+     * @param title A title to display before the text
+     * @param text The text to be highlighted
+     * @param textArea The JTextArea (text box) that will display the text
      * @param indexes  - array including the start and stop indexes of each desired
      *                 highlight
      */

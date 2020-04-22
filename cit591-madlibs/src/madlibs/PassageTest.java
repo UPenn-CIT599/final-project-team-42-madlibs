@@ -63,14 +63,30 @@ class PassageTest {
 	void getUpdatedTextCapitalizeTest() {
 		Passage shortPassage = new Passage(shortText);
 		shortPassage.replaceWords(
-			new String[] {"Alice Cooper", "Smart Car", "angriest"},
-			new Integer[][] {{2}, {5}, {17}}
+			new String[] {"praise", "Alice Cooper", "Smart Car", "angriest"},
+			new Integer[][] {{0}, {2}, {5}, {17}}
 		);
-		String expectedText = "To be Alice Cooper in a Smart Car that is constantly " +
+		String expectedText = "Praise be Alice Cooper in a Smart Car that is constantly " +
 				"trying to make you something else is the angriest accomplishment.";
 		assertEquals(expectedText, shortPassage.getUpdatedText());
 	}
 	
+	@Test
+	void getUpdatedTextCapitalizePoemTest() {
+		Passage shortPassage = new Passage("But soft, what light through yonder window breaks?\r\n" + 
+				"It is the east, and Juliet is the sun!\r\n" + 
+				"Arise fair sun and kill the envious moon,\r\n" + 
+				"Who is already sick and pale with grief");
+		shortPassage.replaceWords(
+			new String[] {"no", "yellow", "smash"},
+			new Integer[][] {{0}, {16}, {21}}
+		);
+		String expectedText = "No soft, what light through yonder window breaks?\r\n" + 
+				"It is the east, and Yellow is the sun!\r\n" + 
+				"Smash fair sun and kill the envious moon,\r\n" + 
+				"Who is already sick and pale with grief";
+		assertEquals(expectedText, shortPassage.getUpdatedText());
+	}
 	@Test
 	void getOriginalTextLongTest() {
 		Passage longPassage = new Passage(longText);
