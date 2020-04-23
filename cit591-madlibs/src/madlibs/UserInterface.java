@@ -17,7 +17,6 @@ import java.util.ArrayList;
  */
 public class UserInterface extends JPanel implements ActionListener {
 
-    private static final int STANDARD_WIDTH = 640;
     private JTextArea text;
     private CardLayout c1 = new CardLayout();
     private JPanel cards = new JPanel(c1);
@@ -34,7 +33,6 @@ public class UserInterface extends JPanel implements ActionListener {
     private ArrayList<MenuEntry> childrensMenu;
     private ArrayList<MenuEntry> classicsMenu;
     private Boolean RadioButtonSelected = null;
-    private JRadioButton [] radioButton;
     private int createYourOwnMenuIndex;
     private String createYourOwnName;
     private Boolean createYourOwn;
@@ -46,7 +44,7 @@ public class UserInterface extends JPanel implements ActionListener {
 
     private String originalText;
     private Passage passage;
-    private MadLib m = new MadLib();
+    //private MadLib m = new MadLib();
     private int numOfWords;
     private String[] replacementWords;
     Integer[][] indexesToReplace;
@@ -127,9 +125,7 @@ public class UserInterface extends JPanel implements ActionListener {
 
         // Displays the Children's Literature menu options
         JLabel childrenLabel = new JLabel("Children's Literature:");        
-        Font menuLabelFont = childrenLabel.getFont();
         childrenLabel.setFont(menuFont); 
-        //childrenLabel.setFont(menuLabelFont.deriveFont(menuLabelFont.getStyle() ^ Font.BOLD)); 
         litMenu.add(childrenLabel);
         for (int i = 1; i <= childrensMenu.size(); i++) {
             radioButton[i] = new JRadioButton(
@@ -412,9 +408,9 @@ public class UserInterface extends JPanel implements ActionListener {
      * highlightText private method highlights portions of a text indicated by the
      * indexes provided in the indexes 2D array
      * 
-     * @param title
-     * @param text
-     * @param textArea
+     * @param title A title to display before the text
+     * @param text The text to be highlighted
+     * @param textArea The JTextArea (text box) that will display the text
      * @param indexes  - array including the start and stop indexes of each desired
      *                 highlight
      */
@@ -440,18 +436,14 @@ public class UserInterface extends JPanel implements ActionListener {
      * @param card
      * @param titleString
      */
-    private void formatTitle(JPanel card, String titleString) {
-        
-                    
+    private void formatTitle(JPanel card, String titleString) {           
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(Color.GRAY, 3));
         Font f = new Font("Calibri",Font.ITALIC | Font.BOLD,30);
-        JLabel title = new JLabel(titleString);      
-        title.setFont(f);
-        
+        JLabel title = new JLabel(titleString);
+        title.setFont(f);        
         title.setForeground(DARK_RED);        
         title.setHorizontalAlignment(SwingConstants.CENTER);
-        //title.setPreferredSize(new Dimension(STANDARD_WIDTH, 50));
         card.add(title, BorderLayout.NORTH);
     }
 

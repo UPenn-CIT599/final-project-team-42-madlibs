@@ -102,7 +102,7 @@ public class MadLib {
                     window.setSize(1100, 600);
                     // .setDefaultCloseOperation exits the program when the window is closed
                     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    window.setResizable(true);
+                    window.setResizable(false);
                     window.setLocation(150, 100);
                     // .setVisible allows frame to be visible
                     window.setVisible(true);

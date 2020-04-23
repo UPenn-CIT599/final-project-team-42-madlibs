@@ -42,9 +42,9 @@ public class Passage {
 		private String text;
 		// The blank space (including new lines?) that comes after this word;
 		private String trailingBlanks;
-		// Used to decide if the first character should be capitalized or not
-		private int sentenceIndex;
 		private boolean replaced = false;
+		// Track if the original word was capitalized, so the replaced should also be
+		private boolean capitalized = false;
 		/**
 		 * Constructs a new Word object from the supplied parameters.
 		 * @param word The actual text of the word
@@ -53,10 +53,12 @@ public class Passage {
 		 * @param sentenceIndex The position of this word in its sentence.
 		 * 
 		 */
-		Word (String text, String posTag, String trailingBlanks, int sentenceIndex) {
+		Word (String text, String posTag, String trailingBlanks) {
 			this.text = text;
-			this.sentenceIndex = sentenceIndex;
 			this.trailingBlanks = trailingBlanks;
+			if (Character.isUpperCase(text.charAt(0))) {
+				capitalized = true;
+			}
 		}
 		
 		private void setReplaced(boolean replaced) {
@@ -69,7 +71,7 @@ public class Passage {
 		
 		public String toString() {
 			// If this is the first character of the sentence, capitalize the first character
-			if (sentenceIndex == 0) {
+			if (capitalized) {
 				return text.substring(0, 1).toUpperCase() + text.substring(1) + trailingBlanks;
 			}
 			else {
@@ -180,8 +182,8 @@ public class Passage {
 				// Adding a separate word object to both original and updated word
 				// lists so can modify a Word object in one list without affecting
 				// the other
-				originalWords.add(new Word(word, posTag, trailingBlanks, i));
-				modifiedWords.add(new Word(word, posTag, trailingBlanks, i));
+				originalWords.add(new Word(word, posTag, trailingBlanks));
+				modifiedWords.add(new Word(word, posTag, trailingBlanks));
 				// Get the different parts of speech, adding to appropriate object
 				if (posTag.equals("NN") || posTag.equals("NNP")) {
 					singularNouns.add(word, passageIndex);
