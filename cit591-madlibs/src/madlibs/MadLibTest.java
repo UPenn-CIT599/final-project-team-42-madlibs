@@ -1,5 +1,11 @@
 package madlibs;
 
+/**
+ * Unit test to compare entries in index.csv file with the number 
+ * of entries generated in makeMenu method in MadLib class
+ *  
+ */
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.regex.*;
@@ -14,15 +20,18 @@ class MadLibTest {
      int childrensBooksCounter = 0;
      int classicsBooksCounter = 0;
      
-     MadLib m = new MadLib();     
-
+     // object created from MadLib class
+     MadLib m = new MadLib();
+     
      @Test
      void makeMenuTest () {
-          // Reads in the text from index.csv
+          // call makeMenu method
           m.makeMenu();
+          // determine size of menu ArrayList
           int childrensBooksNumber = m.getChildrensMenu().size();
           int classicsBooksNumber = m.getClassicsMenu().size();
 
+          // Reads in the text from index.csv, regular expression pattern matching
           File inputFile = new File("index.csv");
           try {
                Scanner in = new Scanner(inputFile);
@@ -37,7 +46,7 @@ class MadLibTest {
                          classicsBooksCounter ++; 
                          }
                     }
-                         
+               in.close();
                     
           }
                     
