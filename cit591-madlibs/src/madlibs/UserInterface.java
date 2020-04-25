@@ -17,9 +17,9 @@ import java.util.ArrayList;
  */
 public class UserInterface extends JPanel implements ActionListener {
 
-    private JTextArea text;
-    private CardLayout c1 = new CardLayout();
-    private JPanel cards = new JPanel(c1);
+    private JTextArea inputOriginalText;
+    private CardLayout cardLayout = new CardLayout();
+    private JPanel cards = new JPanel(cardLayout);
     private JPanel firstCard = new JPanel();
     private JPanel secondCard = new JPanel();
     private JPanel thirdCard = new JPanel();
@@ -49,11 +49,11 @@ public class UserInterface extends JPanel implements ActionListener {
     private String[] replacementWords;
     Integer[][] indexesToReplace;
     
-    private JTextArea text2;
+    private JTextArea outputModifiedText;
     private JButton playAgainButton;
     private int firstStart;
     
-    private JTextArea text3;
+    private JTextArea outputOriginalText;
     
     private Color DARK_RED;  
     private Color LT_GREEN;
@@ -67,7 +67,7 @@ public class UserInterface extends JPanel implements ActionListener {
         this.childrensMenu = childrensMenu;
         this.classicsMenu = classicsMenu;
 
-        setLayout(c1);
+        setLayout(cardLayout);
         DARK_RED = new Color(0xc0, 0x00, 0x00);
         LT_GREEN = new Color(0x2f, 0xb6, 0x2f);
         menuFont = new Font("Lucinda Grande", Font.BOLD, 18);
@@ -80,7 +80,7 @@ public class UserInterface extends JPanel implements ActionListener {
         cards.add(sixthCard, "Replace -ed Verbs");
         cards.add(seventhCard, "Replace -ing Verbs");
         cards.add(eighthCard, "Result");
-        c1.show(cards, "Menu");
+        cardLayout.show(cards, "Menu");
 
         designFirstCard();
 
@@ -166,12 +166,12 @@ public class UserInterface extends JPanel implements ActionListener {
 
         // Places scrolling text area into the right-middle (EAST) cell of the overall
         // BorderLayout
-        text = new JTextArea();
-        text.setEditable(false);
-        text.setMargin(new Insets(4, 4, 4, 4));
-        text.setLineWrap(true);
-        text.setWrapStyleWord(true);
-        firstCard.add(new JScrollPane(text), BorderLayout.CENTER);
+        inputOriginalText = new JTextArea();
+        inputOriginalText.setEditable(false);
+        inputOriginalText.setMargin(new Insets(4, 4, 4, 4));
+        inputOriginalText.setLineWrap(true);
+        inputOriginalText.setWrapStyleWord(true);
+        firstCard.add(new JScrollPane(inputOriginalText), BorderLayout.CENTER);
 
         // Places a "PLAY MAD-LIBS button into the bottom cell of the overall
         // BorderLayout and
@@ -210,22 +210,22 @@ public class UserInterface extends JPanel implements ActionListener {
     private void designWordRequestCards() {
 
         if (cardCounter == 0) {
-            c1.show(cards, "Replace Nouns");
+            cardLayout.show(cards, "Replace Nouns");
             setWordRequestCardLayout(secondCard);
         } else if (cardCounter == 1) {
-            c1.show(cards, "Replace Plural Nouns");
+            cardLayout.show(cards, "Replace Plural Nouns");
             setWordRequestCardLayout(thirdCard);
         } else if (cardCounter == 2) {
-            c1.show(cards, "Replace Adjectives");
+            cardLayout.show(cards, "Replace Adjectives");
             setWordRequestCardLayout(forthCard);
         } else if (cardCounter == 3) {
-            c1.show(cards, "Replace Adverbs");
+            cardLayout.show(cards, "Replace Adverbs");
             setWordRequestCardLayout(fifthCard);
         } else if (cardCounter == 4) {
-            c1.show(cards, "Replace -ed Verbs");
+            cardLayout.show(cards, "Replace -ed Verbs");
             setWordRequestCardLayout(sixthCard);
         } else if (cardCounter == 5) {
-            c1.show(cards, "Replace -ing Verbs");
+            cardLayout.show(cards, "Replace -ing Verbs");
             setWordRequestCardLayout(seventhCard);
         }
         
@@ -342,7 +342,7 @@ public class UserInterface extends JPanel implements ActionListener {
      * seventhCard
      */
     private void designResultCard() {
-        c1.show(cards, "Result");
+        cardLayout.show(cards, "Result");
 
         while (firstStart == 0) {
             // Sets BorderLayout as layout for firstCard and inserts title in the top
@@ -354,22 +354,22 @@ public class UserInterface extends JPanel implements ActionListener {
             resultPanel.setLayout(new GridLayout(0, 2));
             // Places scrolling text area into the middle (CENTER) cell of the overall
             // BorderLayout (note the EAST cell is empty)
-            text2 = new JTextArea();
-            text2.setEditable(false);
-            text2.setMargin(new Insets(4, 4, 4, 4));
-            text2.setLineWrap(true);
-            text2.setWrapStyleWord(true);
+            outputModifiedText = new JTextArea();
+            outputModifiedText.setEditable(false);
+            outputModifiedText.setMargin(new Insets(4, 4, 4, 4));
+            outputModifiedText.setLineWrap(true);
+            outputModifiedText.setWrapStyleWord(true);
 
             // Places scrolling text area into the middle (CENTER) cell of the overall
             // BorderLayout (note the EAST cell is empty)
-            text3 = new JTextArea();
-            text3.setEditable(false);
-            text3.setMargin(new Insets(4, 4, 4, 4));
-            text3.setLineWrap(true);
-            text3.setWrapStyleWord(true);
+            outputOriginalText = new JTextArea();
+            outputOriginalText.setEditable(false);
+            outputOriginalText.setMargin(new Insets(4, 4, 4, 4));
+            outputOriginalText.setLineWrap(true);
+            outputOriginalText.setWrapStyleWord(true);
 
-            resultPanel.add(text2);
-            resultPanel.add(text3);
+            resultPanel.add(outputModifiedText);
+            resultPanel.add(outputOriginalText);
             eighthCard.add(new JScrollPane(resultPanel), BorderLayout.CENTER);
 
             // Places a "PLAY AGAIN button into the bottom cell of the overall
@@ -397,11 +397,11 @@ public class UserInterface extends JPanel implements ActionListener {
 
         // Displays Mad-Lib updatedText in the text field with the replaced words
         // highlighted
-        highlightText("Updated Passage:  \n\n", passage.getUpdatedText(), text2, passage.getIndexesOfReplacedWords());
+        highlightText("Updated Passage:  \n\n", passage.getUpdatedText(), outputModifiedText, passage.getIndexesOfReplacedWords());
 
         // Displays Mad-Lib originalText in the text field with the replaced words
         // highlighted
-        highlightText("Original Passage: \n\n", passage.getOriginalText(), text3, passage.getIndexesOfOriginalWords());
+        highlightText("Original Passage: \n\n", passage.getOriginalText(), outputOriginalText, passage.getIndexesOfOriginalWords());
     }
 
     /**
@@ -466,7 +466,7 @@ public class UserInterface extends JPanel implements ActionListener {
                 if (target == playButton) {
                     if (RadioButtonSelected == true) {
                         if (createYourOwn == true);{
-                            originalText = text.getText();
+                            originalText = inputOriginalText.getText();
                         }
                         passage = new Passage(originalText);
                         designWordRequestCards();
@@ -492,7 +492,7 @@ public class UserInterface extends JPanel implements ActionListener {
                         
                 }
                 if (target == playAgainButton) {
-                    c1.show(cards, "Menu");
+                    cardLayout.show(cards, "Menu");
                 }
             }
             // Manages display of passage in right text panel when each radio button
@@ -502,15 +502,15 @@ public class UserInterface extends JPanel implements ActionListener {
                 if (((JRadioButton) target).isSelected()) {
                     passageSelected = (JRadioButton) target;
                     if (passageSelected.getName() != createYourOwnName ) {                        
-                        text.setEditable(false);
+                        inputOriginalText.setEditable(false);
                         originalText = m.litReader(passageSelected.getName());
-                        text.setText(originalText);
+                        inputOriginalText.setText(originalText);
                         createYourOwn = false;
                         
                     }
                     else {
-                        text.setText("Type your own Mad-Lib passage here.");
-                        text.setEditable(true);
+                        inputOriginalText.setText("Type your own Mad-Lib passage here.");
+                        inputOriginalText.setEditable(true);
                         //originalText = text.getText();
                         createYourOwn = true;
                     }

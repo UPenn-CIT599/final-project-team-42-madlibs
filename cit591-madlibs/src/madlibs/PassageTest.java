@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class PassageTest {
-	String shortText = "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.";
-	String longText = "Alice was beginning to get very tired of sitting by her sister on the\n" + 
+	static final String shortText = "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.";
+	static final String longText = "Alice was beginning to get very tired of sitting by her sister on the\n" + 
 			"bank, and of having nothing to do: once or twice she had peeped into\n" + 
 			"the book her sister was reading, but it had no pictures or\n" + 
 			"conversations in it, and what is the use of a book, thought Alice\n" + 

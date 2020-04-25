@@ -5,25 +5,22 @@ import edu.stanford.nlp.simple.*;
 
 /**
  * This class represents a passage of text in a suitable format for playing a
- * game of MadLibs. It chooses which words will be replaced and accepts replacement words.
- * Will return the newly modified text along with the indexes of the modified words
+ * game of MadLibs. It tracks the indexes of the different parts of speech and
+ * accepts replacement words. It can produce both the modified and original text
+ * along with the indexes where modified words appear in the passage
  * so that they can be highlighted. 
  *
  */
 public class Passage {
 	
-	
+	// INSTANCE VARIABLES //
+	///////////////////////
 	// For storing the words as individual strings
 	private ArrayList<Word> originalWords;
 	private ArrayList<Word> modifiedWords;
 	
-	// For tracking all parts of speech. Helps when reconstructing text and
-	// need to flag punctuation
-	private ArrayList<String> posTags;
-	
-	// For storing the indexes of the different parts of speech
-	/* TODO: consider combining with the PartOfSpeech enum somehow (would involve
-	 * making it a "regular" class instead of an enum. 
+	/* These different PartOfSpeechTrackers store the indexes in the original text
+	 * where the the respective part of speech can be found.
 	 */
 	private PartOfSpeechTracker singularNouns;
 	private PartOfSpeechTracker pluralNouns;
@@ -40,10 +37,11 @@ public class Passage {
 	private class Word {
 		// The actual word, as a string
 		private String text;
-		// The blank space (including new lines?) that comes after this word;
+		// The blank spaces (including new lines) that comes after this word
 		private String trailingBlanks;
+		// Has the the text of this word been overridden by the user?
 		private boolean replaced = false;
-		// Track if the original word was capitalized, so the replaced should also be
+		// Track if the original word was capitalized, so the replaced word can also be
 		private boolean capitalized = false;
 		/**
 		 * Constructs a new Word object from the supplied parameters.
@@ -69,8 +67,9 @@ public class Passage {
 			return replaced;
 		}
 		
+		@Override
 		public String toString() {
-			// If this is the first character of the sentence, capitalize the first character
+			// If the original word was capitalized, then always capitalize the word
 			if (capitalized) {
 				return text.substring(0, 1).toUpperCase() + text.substring(1) + trailingBlanks;
 			}
@@ -80,7 +79,7 @@ public class Passage {
 		}
 		
 		/*
-		 * Get the length of this word, including the blank spaces.
+		 * Get the length of this word, no including the blank spaces.
 		 */
 		private int length() {
 			return toString().length();
@@ -93,20 +92,22 @@ public class Passage {
 		private void setText(String text) {
 			this.text = text;
 		}
+		
 		/**
-		 * Update the actual string part of the word with the new string
-		 * @param text
+		 * Get the text of the word, not including blank spaces
 		 */
 		private String getText() {
 			return text;
 		}
+		
 	}
 	
 	// For tracking the indexes of the different parts of speech
 	class PartOfSpeechTracker {
 		// Keys are the string of original words, values are indexes where this word can be found.
-		// Keys but not correspond to current word, if replacement had been done
+		// Keys do not correspond to current word, if replacement had been done
 		private HashMap<String, ArrayList<Integer>> indexLookup;
+		
 		PartOfSpeechTracker() {
 			indexLookup = new HashMap<String, ArrayList<Integer>>();
 		}
@@ -159,10 +160,8 @@ public class Passage {
 	 */
 	Passage (String originalText) {
 		
-	
 		originalWords = new ArrayList<Word>();
 		modifiedWords = new ArrayList<Word>();
-		
 		
 		singularNouns = new PartOfSpeechTracker();
 		pluralNouns = new PartOfSpeechTracker();
@@ -171,8 +170,10 @@ public class Passage {
 		edVerbs = new PartOfSpeechTracker();
 		ingVerbs = new PartOfSpeechTracker();
 		
+		// The Document class is from the Stanford NLP library
 		Document document = new Document(originalText);
 		
+		// We want to keep track of the index of the word within the overall passage
 		int passageIndex = 0;
 		for (Sentence sentence: document.sentences()) {
 			for (int i = 0; i < sentence.length(); i++) {
@@ -184,7 +185,7 @@ public class Passage {
 				// the other
 				originalWords.add(new Word(word, posTag, trailingBlanks));
 				modifiedWords.add(new Word(word, posTag, trailingBlanks));
-				// Get the different parts of speech, adding to appropriate object
+				// Add this word to the appropriate PartOfSpeechTracker
 				if (posTag.equals("NN") || posTag.equals("NNP")) {
 					singularNouns.add(word, passageIndex);
 				}
@@ -227,7 +228,7 @@ public class Passage {
 	}
 	
 	/**
-	 * @return The modified text that contains user supplied words
+	 * @return The modified text with the user supplied words, if any have been supplied
 	 */
 	public String getUpdatedText() {
 		return reconstructText(modifiedWords);
@@ -245,7 +246,7 @@ public class Passage {
 		ArrayList<Integer[]> indexesList = new ArrayList<Integer[]>();
 		for (Word word : individualWords) {
 			if (word.isReplaced()) {
-				indexesList.add(new Integer[] {index, index + word.getText().length() });
+				indexesList.add(new Integer[] {index, index + word.getText().length()});
 			}
 			// The length method includes the trailing blank spaces.
 			index += word.length();

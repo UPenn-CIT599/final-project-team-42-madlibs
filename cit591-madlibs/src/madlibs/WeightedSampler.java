@@ -13,7 +13,11 @@ public class WeightedSampler {
 	
 	ArrayList<Integer[]> indexesToSample;
 	int totalNumberOfIndexes = 0;
-	
+
+	/**
+	 * Creates a new WeightedSampler object.
+	 * @param indexesToSample The 2d Integer array from which rows will be sampled.
+	 */
 	WeightedSampler(Integer[][] indexesToSample) {
 		// Creating an ArrayList helps ensure that we don't mutate original object
 		this.indexesToSample = new ArrayList<Integer[]>();
@@ -24,8 +28,6 @@ public class WeightedSampler {
 	}
 	
 	
-	// Always get up to or above desired percent
-	// Need a seed.... (later)
 	/** 
 	 * Samples 1d Integer arrays from the supplied 2d Integer array. The percentage of 
 	 * of elements contained within the chosen Integer arrays will be equal to or greater
@@ -42,7 +44,7 @@ public class WeightedSampler {
 	 */
 	public Integer[][] sample(double desiredPercent, long seed, Integer maxN) {
 		Random random = new Random(seed);
-		// Make copy so can modify without mutating original
+		// Making a copy so can modify without mutating original
 		ArrayList<Integer[]> indexesToSample = (ArrayList<Integer[]>) this.indexesToSample.clone();
 		ArrayList<Integer[]> sampledIndexes = sample(
 			indexesToSample,
@@ -50,7 +52,7 @@ public class WeightedSampler {
 			random,
 			maxN
 		);
-		
+		// Returning an array rather than a list since easier to work with.
 		return sampledIndexes.toArray(new Integer[sampledIndexes.size()][]);
 	}
 	/**
@@ -84,8 +86,6 @@ public class WeightedSampler {
 			return sampledIndexes;
 		}
 		
-		// index for looping - start randomly
-		int i = random.nextInt(indexesToSample.size());
 		// Create a random variable between 0 and desiredPercent
 		// We will loop over the arrays to sample, summing up their weight, until
 		// we reach the sum of their weights is equal to or greater than the random variable
@@ -94,8 +94,11 @@ public class WeightedSampler {
 		Integer[] currentIndexes;
 		// This variable keeps track of the weight of the current array
 		double currentWeight;
+		// index for looping;
+		int i = 0;
 		while (true) {
 			currentIndexes = indexesToSample.get(i);
+			// Casting one of these ints to a double will ensure that the result is a double
 			currentWeight = (double) currentIndexes.length / totalNumberOfIndexes;
 			weightThreshold -= currentWeight;
 			// Stop looping once the sum of the weights of the traversed arrays is greater than
@@ -130,5 +133,6 @@ public class WeightedSampler {
 		}
 		return sampledIndexes;
 	}
+	
 
 }

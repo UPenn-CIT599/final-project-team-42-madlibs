@@ -13,8 +13,9 @@ public enum PartOfSpeech {
 	ED_VERB("past tense verbs ending in 'ed'", 0.33),
 	ING_VERB("present tense verb ending in 'ing'", 0.33);
 	
+	// A description of this part of speech
 	private String description;
-	// "Suggest" percent of this part of speech to sample
+	// "Suggested" percent of this part of speech to sample
 	private double desiredPercent;
 	
 	PartOfSpeech(String description, double desiredPercent) {
