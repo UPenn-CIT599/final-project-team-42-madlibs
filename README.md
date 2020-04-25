@@ -33,10 +33,36 @@ File > Open Projects from File System
 4) This will result in the following folders and file structure. The Mad Lib application is executed by running MadLib.java.  
 <img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/Eclipse_-_screenshot_3.jpg" width="270" />
 
+**Playing the game**   
+Running the game will result in the following screen being displayed as the initial screen.
+
+<img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/madlib-1.jpg" width="775" />   
+
+The player begins the game by selecting one of he passages listed on the left-hand side of the screen, or inputting their own text by selecting "Create Your Own Literature Mad-Lib Passage" option.  
+The chosen or entered text will appear on the right-hand side of the window.   
+
+<img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/madlib-2.jpg" width="775" />   
 
 
 
+There are 4 subsequent screens with each screen prompting the user to enter a category of words. The word categories are:   
+- singular nouns  
+- plural nouns   
+- adjectives   
+- past tense verbs ending in 'ed'
+- present tense verbs ending in 'ing"   
+
+<img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/madlib-3.jpg" width="775" />   
 
 
+Words need to be entered in each screen. Player will be prompted with the a pop-up if they attempt to go to the next screen without providing all the prompted words.   
+
+<img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/madlib-4.jpg" width="650" />   
+
+The final screen displays the orginal chosen text with replacement works highlighted.   
+
+<img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/madlib-5.jpg" width="775" />   
+
+The game can be played again by clicking the "PLAY AGAIN" button, or ending the game by closing the game window or choosing "Quit MadLib from the drop-down menu.   
 
 
