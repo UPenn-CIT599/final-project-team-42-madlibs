@@ -10,7 +10,8 @@
 **project software components/libraries:**  
 - JDK 10+  
 - Stanford CoreNLP  
-- Swing (user interface)
+- Swing (user interface)  
+**Please note:** attempting to load and run the program with an older JDK version may result in various error conditions.
 
 **Game Flow**  
 Player is given the opportunity to select a passage from an offering of well-known literature or children’s book passages. Passage is read in by the program and analysis/Natural Language Processing is executed on the passage to "tag" words with their part-of-speech (POS). The program ramdomly selects a number of words in the passage. For each selected word, the player is prompted to provide a replacement word that corresponds to the same part-of-speech (e.g. verb, proper noun, etc.) as the original word.
