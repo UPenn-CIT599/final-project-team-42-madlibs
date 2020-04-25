@@ -57,9 +57,9 @@ There are 4 subsequent screens with each screen prompting the user to enter a ca
 
 Words need to be entered in each screen. Player will be prompted with the a pop-up if they attempt to go to the next screen without providing all the prompted words.   
 
-<img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/madlib-4.jpg" width="650" />   
+<img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/madlib-4.jpg" width="500" />   
 
-The final screen displays the orginal chosen text with replacement works highlighted.   
+The final screen displays the modified text on the left-hand side of the window and orginal text in the right-hand side. Replaced words are highlighted.   
 
 <img src="https://github.com/UPenn-CIT599/final-project-team-42-madlibs/blob/master/screenshots/madlib-5.jpg" width="775" />   
 
